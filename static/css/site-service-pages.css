@@ -1,0 +1,156 @@
+/* Trang riêng từng dịch vụ (/dich-vu/<slug>): đoạn giới thiệu, các mục nhỏ (chỉ chữ), thanh chuyển dịch vụ, dải liên hệ. */
+/* Khung nội dung dùng chiều rộng .container chung để thẳng hàng với banner và các trang khác. */
+.service-intro p { font-size: var(--text-body); }
+.service-intro { margin-bottom: 16px; }
+/* WEB-03: nút hành động theo dịch vụ ngay dưới lời mở đầu; nút Gọi viền màu chính (nền sáng, khác .btn-ghost trắng của khối tối) */
+.service-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 4px 0 var(--space-heading); }
+.service-actions .btn-ghost { border-color: var(--c-primary); color: var(--c-primary); background: transparent; }
+.service-actions .btn-ghost:hover { background: var(--c-primary); color: #fff; }
+@media (max-width: 560px) {
+  /* Nhãn dài (đặc biệt tiếng Pháp) được xuống hàng cả nút, không ép chữ tràn khỏi viền. */
+  .service-actions { flex-wrap: wrap; gap: 8px; }
+  .service-actions .btn { display: inline-flex; flex: 1 0 auto; align-items: center; justify-content: center; gap: 4px; min-width: 0; max-width: 100%; min-height: 48px; padding: 12px 10px; font-size: 1rem; white-space: nowrap; }
+}
+@media (max-width: 360px) {
+  .service-actions .btn { padding: 12px 8px; font-size: .9375rem; }
+}
+.service-section { padding: var(--space-group) 0; border-top: 1px solid var(--c-border); }
+.service-section h2 { font-size: var(--text-section); margin-bottom: .3em; }
+.service-section > p { color: var(--c-muted); margin: 0; }
+
+
+/* Thanh chuyển dịch vụ (partial service-switcher-bar; khung dính + nền ngang dùng chung .category-bar, nút tròn dùng chung
+   .category-tabs). Máy tính: hàng nút có icon. Điện thoại / máy tính bảng: ô chọn ghi dịch vụ đang xem, chạm xổ danh sách. */
+.service-tabs { flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; } /* luôn một dòng (tiếng Pháp dài: tràn thì vuốt ngang); mục đầu/cuối margin auto = căn giữa khi vừa */
+.service-tabs::-webkit-scrollbar { display: none; }
+.service-tabs a { flex: none; gap: 8px; padding: 0 14px; font-size: .92rem; } .service-tabs a:first-child { margin-left: auto; } .service-tabs a:last-child { margin-right: auto; }
+.service-tabs svg { width: 20px; height: 20px; flex: none; } .service-tabs svg, .service-picker svg:not(.service-picker-chevron) { transform: translateY(-1.5px); } /* hình icon nằm nửa dưới khung + chữ Việt chừa chỗ dấu phía trên: nâng icon cho thẳng hàng chữ */
+.service-picker { display: none; }
+.service-switcher.is-overflowing .service-tabs { display: none; }
+.service-switcher.is-overflowing .service-picker { display: block; position: relative; }
+  .service-picker summary {
+    display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border: 1px solid var(--c-border); border-radius: 12px;
+    background: var(--c-service-card-bg); color: var(--c-dark); font-weight: 600; cursor: pointer; list-style: none;
+  }
+  .service-picker summary::-webkit-details-marker { display: none; }
+  .service-picker summary span { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .service-picker svg { width: 22px; height: 22px; flex: none; color: var(--c-primary); }
+  .service-picker .service-picker-chevron { color: var(--c-dark); transition: transform .2s; }
+  .service-picker[open] .service-picker-chevron { transform: rotate(180deg); }
+  .service-picker-list {
+    position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 1; padding: 6px; border-radius: 12px;
+    background: var(--c-bg); box-shadow: 0 12px 30px rgba(60, 35, 20, .16); border: 1px solid var(--c-border);
+  }
+  .service-picker-list a { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 12px; border-radius: 8px; color: var(--c-text); font-weight: 600; }
+  .service-picker-list a.active { background: var(--c-tint); color: var(--c-primary); }
+@media (prefers-reduced-motion: reduce) { .service-picker-chevron { transition: none; } }
+
+/* Hướng dẫn viên (2026-11-15, partial service-itinerary-reasons-and-info): lịch trình dạng dòng thời gian (dùng lại .journey của
+   "Một ngày ở Đường Lâm" trang chủ), 4 lý do, bảng thông tin dịch vụ. */
+.service-itinerary, .service-reasons, .service-info { padding: var(--space-group) 0; border-top: 1px solid var(--c-border); }
+.service-itinerary .journey-intro { top: 150px; } /* cột tiêu đề dính dưới header (61px) + thanh chuyển dịch vụ (~64px), không chui dưới thanh */
+.journey-step .journey-sub { margin: 0 0 6px; color: var(--c-primary); font-weight: 600; font-size: .95rem; } /* câu phụ dưới tên điểm dừng; mạnh hơn .journey-step p */
+.service-note { margin: 20px 0 0; font-size: .9rem; font-style: italic; color: var(--c-muted); }
+.service-reasons h2, .service-info h2 { font-size: var(--text-section); margin-bottom: .6em; }
+.service-reasons-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-card); }
+.service-reason { padding: 20px 22px; border: 1px solid var(--c-border); border-radius: 14px; background: var(--c-tint); }
+.service-reason h3 { font-size: var(--text-subheading); margin: 0 0 6px; }
+.service-reason p { margin: 0; color: var(--c-muted); }
+/* Cột nhãn rộng theo nhãn dài nhất của bảng (vd. "Hình thức phục vụ"), không xuống dòng; mỗi hàng dùng subgrid nên các hàng chung cột */
+.service-info dl { display: grid; grid-template-columns: max-content 1fr; gap: var(--space-card) var(--space-group); margin: 0; }
+.service-info dl > div { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; }
+.service-info dt { font-weight: 600; color: var(--c-dark); white-space: nowrap; }
+.service-info dd { margin: 0; }
+@media (max-width: 640px) {
+  .service-reasons-grid { grid-template-columns: 1fr; }
+  .service-info dl, .service-info dl > div { grid-template-columns: 1fr; }
+  .service-info dl { row-gap: var(--space-heading); }
+  .service-info dl > div { gap: 4px; }
+  .service-info dt { white-space: normal; }
+}
+
+/* Homestay (2026-11-15): mục có ảnh (stories) — chữ trên, lưới ảnh dưới (1 · 2 · 3 · 4 cột theo số ảnh), ảnh cắt cùng chiều cao, bấm mở
+   phóng to (lightbox). Thẻ lý do có link (dẫn tới trang dịch vụ liên quan). */
+.service-dishes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-card); padding: var(--space-group) 0; border-top: 1px solid var(--c-border); }
+.service-dishes-title { grid-column: 1 / -1; margin: 0; font-size: var(--text-section); }
+.service-dish a, .service-dish img { display: block; }
+.service-dish img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; }
+.service-dish h3 { font-size: var(--text-subheading); margin: 12px 0 6px; overflow-wrap: break-word; }
+.service-dish p { color: var(--c-muted); margin: 0; text-align: start; text-wrap: wrap; }
+@media (max-width: 760px) { .service-dishes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .service-dishes { gap: calc(var(--space-card) + 12px) calc(var(--space-card) + 4px); }
+}
+@media (max-width: 480px) { .service-dishes { grid-template-columns: 1fr; } }
+.service-story { padding: var(--space-group) 0; border-top: 1px solid var(--c-border); }
+.service-body > :is(.service-section, .service-itinerary, .service-reasons, .service-info, .service-story, .service-dishes):last-child { padding-bottom: 0; }
+.service-story h2 { font-size: var(--text-section); margin-bottom: .4em; }
+.service-story-text p { color: var(--c-muted); margin: 0 0 12px; }
+.service-story-text h3 { font-size: var(--text-subheading); margin: 18px 0 4px; }
+.service-story-photos { display: grid; grid-template-columns: repeat(var(--photo-cols, 1), minmax(0, 1fr)); gap: var(--space-photo); margin-top: var(--space-heading); }
+.service-story-photos.photos-2 { --photo-cols: 2; }
+.service-story-photos.photos-3 { --photo-cols: 3; }
+.service-story-photos.photos-4 { --photo-cols: 4; } /* 4 ảnh: một hàng trên máy tính; điện thoại về 2 cột (2×2) */
+.service-story-photos.photos-6 { --photo-cols: 3; }
+.service-story-photos a { display: block; }
+.service-story-photos img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; }
+.service-story-photos.photos-6 img { aspect-ratio: 3 / 4; }
+.service-story-photos.dining-space-photos { --photo-cols: 2; }
+.service-story-photos.dining-space-photos img { height: auto; aspect-ratio: 4 / 3; }
+.service-room { margin: 0; min-width: 0; }
+.service-room figcaption { padding-top: 16px; }
+.service-room h3 { margin: 0 0 8px; font-size: var(--text-subheading); }
+.service-room p { margin: 0; color: var(--c-muted); }
+.service-reasons-intro { color: var(--c-muted); margin: -4px 0 18px; }
+/* Trải nghiệm (2026-11-15): mục ảnh bên cạnh chữ (ảnh vuông / dọc không bị cắt mất nhiều), danh sách món, dòng "Điểm thú vị", link. */
+.service-story.is-side { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--space-group); align-items: start; }
+.service-story.is-image-left { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); grid-template-areas: "photos text"; }
+.service-story.is-image-left .service-story-text { grid-area: text; }
+.service-story.is-image-left .service-story-photos { grid-area: photos; }
+.service-story.is-side .service-story-photos { margin-top: 0; }
+.service-story.is-side .service-story-photos img { width: auto; max-width: 100%; height: auto; max-height: 520px; aspect-ratio: auto; object-fit: contain; margin-inline: auto; } /* giữ tỉ lệ ảnh */
+@media (min-width: 641px) {
+  .service-story.is-side:has(.crop-top, .crop-bottom) { align-items: stretch; }
+  .service-story.is-side:has(.crop-top, .crop-bottom) .service-story-text > :last-child { margin-bottom: 0; }
+  .service-story.is-side .service-story-photos:is(.crop-top, .crop-bottom) { position: relative; }
+  .service-story.is-side .service-story-photos:is(.crop-top, .crop-bottom) a { position: absolute; inset: 0; }
+  .service-story.is-side .service-story-photos:is(.crop-top, .crop-bottom) img { width: 100%; height: 100%; max-height: none; object-fit: cover; }
+  .service-story.is-side .service-story-photos.crop-top img { object-position: center 65%; }
+  .service-story.is-side .service-story-photos.crop-bottom img { object-position: center top; }
+}
+.service-story-list { margin: 0 0 12px; padding-left: 20px; color: var(--c-muted); }
+.service-story-list li { margin-bottom: 6px; }
+.service-story-list strong { color: var(--c-dark); }
+.dining-menu-list { padding: 0; list-style: none; line-height: 1.6; }
+.dining-menu-list li + li { margin-top: 14px; }
+.dining-menu-list strong { display: block; margin-bottom: 2px; font-weight: 700; }
+.service-story-highlight { margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid var(--c-primary); border-radius: 0 10px 10px 0; background: var(--c-tint); color: var(--c-text); }
+.service-story-highlight strong { color: var(--c-primary); }
+.service-story-link { margin: 12px 0 0; font-weight: 600; }
+a.service-reason { color: inherit; transition: border-color .2s, box-shadow .2s; }
+a.service-reason:hover { border-color: var(--c-primary); box-shadow: 0 6px 18px rgba(60, 35, 20, .08); }
+a.service-reason h3::after { content: '\00a0→'; color: var(--c-primary); white-space: nowrap; }
+@media (max-width: 640px) {
+  .service-story.is-side { display: block; }
+  .service-story.is-side .service-story-photos { margin-top: var(--space-heading); }
+  .service-story-photos { --photo-cols: 2; }
+  .service-story-photos.photos-3, .service-story-photos.photos-4, .service-story-photos.photos-6 { --photo-cols: 2; } /* Màn nhỏ dùng 2 cột. */
+  .service-story-photos.photos-1 { --photo-cols: 1; }
+  .service-story-photos.photos-3 a:first-child { grid-column: 1 / -1; } /* 3 ảnh: ảnh đầu (ngang) trải hết, hai ảnh dọc chung hàng */
+}
+@media (max-width: 480px) {
+  .service-story-photos.room-photos { --photo-cols: 1; }
+}
+
+/* Specialties: keep portrait photos proportional without leaving tall, empty text columns. */
+.service-body-specialties .service-story { padding-block: clamp(24px, 2.2vw, 32px); }
+.service-body-specialties .service-story.is-side { align-items: center; }
+.service-body-specialties .service-story.is-side .service-story-photos img { max-height: 360px; }
+.service-body-specialties .service-story-text > :last-child { margin-bottom: 0; }
+@media (min-width: 641px) and (max-width: 960px) {
+  .service-body-specialties .service-story.is-side { gap: 24px; }
+  .service-body-specialties .service-story.is-side .service-story-photos img { max-height: 320px; }
+}
+@media (max-width: 640px) {
+  .service-body-specialties .service-story.is-side .service-story-photos img { max-height: 320px; }
+}

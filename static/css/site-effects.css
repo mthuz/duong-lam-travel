@@ -1,0 +1,80 @@
+/* Hiệu ứng chuyển động. Trạng thái "ẩn chờ hiện" chỉ áp khi có JS (html.js),
+   nên trình duyệt tắt JS vẫn thấy đủ nội dung. */
+
+/* Header thu gọn khi cuộn */
+.site-header { transition: box-shadow .3s, background .3s; }
+.header-inner { transition: height .3s; }
+.site-header.is-scrolled { box-shadow: 0 4px 18px rgba(60, 35, 20, .1); }
+.site-header.is-scrolled .header-inner { height: 60px; }
+
+
+/* Hero: ảnh phóng chậm (Ken Burns), chữ trượt lên lần lượt */
+.hero-slide { transition: opacity 1.2s ease, transform 7s ease-out; }
+.hero-slide.is-active { transform: scale(1.12); }
+.hero-content > * { animation: rise-in .9s cubic-bezier(.2, .7, .2, 1) both; }
+.hero-content > :nth-child(2) { animation-delay: .15s; }
+.hero-content > :nth-child(3) { animation-delay: .3s; }
+.hero-content > :nth-child(4) { animation-delay: .45s; }
+.page-banner .container > *, .post-hero-content > * { animation: rise-in .8s cubic-bezier(.2, .7, .2, 1) both; }
+.page-banner .container > :nth-child(2), .post-hero-content > :nth-child(2) { animation-delay: .12s; }
+.page-banner .container > :nth-child(3), .post-hero-content > :nth-child(3) { animation-delay: .24s; }
+
+/* Dải số liệu dưới banner trang chủ: trượt lên ngay khi vào trang (không chờ cuộn, vì lúc mới vào nó chỉ lộ một phần).
+   Dùng animation CSS để chạy từ lần vẽ đầu tiên; các số hiện so le như hiệu ứng khi cuộn. */
+.fact { animation: rise-in .8s cubic-bezier(.2, .7, .2, 1) both; animation-delay: .35s; }
+.fact:nth-child(2) { animation-delay: .47s; }
+.fact:nth-child(3) { animation-delay: .59s; }
+.fact:nth-child(4) { animation-delay: .71s; }
+
+/* Hiện dần khi cuộn tới */
+.js [data-reveal] {
+  opacity: 0; transform: translateY(28px);
+}
+.js [data-reveal].is-revealed {
+  opacity: 1; transform: none;
+  transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+/* Nút, thẻ: nhấc nhẹ khi rê chuột */
+.btn { transition: background .2s, color .2s, transform .2s, box-shadow .2s; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(60, 35, 20, .18); }
+.post-card { transition: transform .3s, box-shadow .3s; }
+.post-card:hover { box-shadow: 0 2px 6px rgba(60, 35, 20, .1), 0 16px 36px rgba(60, 35, 20, .2); }
+.season { transition: transform .3s; }
+.season:hover { transform: translateY(-4px); }
+.site-nav a { position: relative; transition: background .2s, color .2s; }
+
+/* Ảnh: lớp phủ nhẹ và biểu tượng phóng to khi rê chuột */
+.photo-strip a, .gallery-grid figure > a { position: relative; }
+.photo-strip a::after, .gallery-grid figure > a::after {
+  content: '⤢'; position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 1.8rem; color: #fff; background: rgba(42, 33, 27, .35); opacity: 0; transition: opacity .3s;
+}
+.photo-strip a:hover::after, .gallery-grid figure > a:hover::after { opacity: 1; }
+
+/* Thanh tiến độ đọc bài */
+.reading-progress {
+  position: fixed; top: 0; left: 0; z-index: 60; height: 3px; width: 100%;
+  background: linear-gradient(90deg, var(--c-accent), var(--c-primary));
+  transform-origin: 0 50%; transform: scaleX(0);
+}
+
+@keyframes rise-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+  .hero-slide.is-active { transform: none; }
+}
+
+/* Blog: đổi danh mục tại chỗ — kết quả cũ mờ đi rồi kết quả mới hiện lại (site-blog-filter.js) */
+[data-blog-results] { transition: opacity .18s ease; }
+[data-blog-results].is-loading { opacity: .3; pointer-events: none; }
+[data-blog-results].is-replacing { opacity: 0; }
+.blog-filter-spinner:not([hidden]) {
+  position: fixed; z-index: 21; left: 50%; top: var(--blog-spinner-top);
+  width: 28px; height: 28px; margin-left: -14px; border: 3px solid var(--c-border);
+  border-top-color: var(--c-primary); border-radius: 50%; pointer-events: none;
+  animation: spin .7s linear infinite;
+}

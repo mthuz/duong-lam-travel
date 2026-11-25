@@ -1,0 +1,233 @@
+/* Trang Ảnh: nút "Gửi ảnh của bạn" mở popup form khách gửi ảnh; tim ảnh; dòng ghi tác giả dưới ảnh khách gửi.
+   Chỉ nạp ở trang thư viện ảnh. */
+/* Thanh công cụ trang Ảnh: nút gửi ảnh bên trái, tìm + sắp xếp bên phải */
+.gallery-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-card); }
+.gallery-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.gallery-search { position: relative; display: block; }
+.gallery-search-submit {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 36px; height: 36px;
+  padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--c-muted); cursor: pointer; transition: background .15s, color .15s;
+}
+.gallery-search-submit:hover, .gallery-search-submit:focus-visible { background: var(--c-primary); color: #fff; outline: none; }
+.gallery-search input {
+  height: 44px; border: 1px solid var(--c-border); border-radius: 999px; background: #fff; color: var(--c-text); font: inherit; font-size: 1rem;
+  transition: border-color .15s, box-shadow .15s;
+}
+.gallery-search input { width: 280px; padding: 0 44px 0 18px; }
+.gallery-search input::-webkit-search-cancel-button { margin-right: 4px; }
+.gallery-search input:focus { outline: none; border-color: var(--c-primary); box-shadow: 0 0 0 3px rgba(154, 74, 43, .15); }
+
+/* Dropdown sắp xếp: giống menu "Liên hệ" (khung trắng bo góc, bóng đổ, mũi tên xoay khi mở) */
+.sort-dropdown { position: relative; }
+.sort-dropdown-toggle {
+  display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border: 1px solid var(--c-border); border-radius: 999px;
+  background: #fff; color: var(--c-text); font: inherit; font-size: .95rem; font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: border-color .15s, background .15s;
+}
+.sort-dropdown-label { color: var(--c-muted); font-weight: 400; margin-right: 4px; }
+.sort-dropdown-toggle::after {
+  content: ''; display: inline-block; width: 6px; height: 6px; margin-left: 10px; margin-top: -3px;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); opacity: .6;
+  transition: transform .25s ease, opacity .25s;
+}
+.sort-dropdown:hover .sort-dropdown-toggle, .sort-dropdown.is-open .sort-dropdown-toggle { border-color: #d6c7b5; background: var(--c-tint); }
+.sort-dropdown:hover .sort-dropdown-toggle::after, .sort-dropdown:focus-within .sort-dropdown-toggle::after,
+.sort-dropdown.is-open .sort-dropdown-toggle::after { transform: translateY(3px) rotate(-135deg); opacity: 1; }
+.sort-menu {
+  position: absolute; top: 100%; right: 0; z-index: 30; min-width: 210px; margin: 0; padding: 14px 0 0; list-style: none;
+  opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .18s, transform .18s, visibility .18s;
+}
+/* padding-top là "cầu nối" để rê chuột từ nút xuống danh sách không bị đóng; nền trắng nằm ở ::before */
+.sort-menu::before {
+  content: ''; position: absolute; inset: 8px 0 0; z-index: -1; background: #fff; border: 1px solid var(--c-border);
+  border-radius: 12px; box-shadow: 0 12px 30px rgba(60, 35, 20, .14);
+}
+.sort-menu li { padding: 0 6px; }
+.sort-menu li:last-child { padding-bottom: 6px; }
+.sort-menu a {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 8px; padding: 9px 14px;
+  color: var(--c-text); white-space: nowrap;
+}
+.sort-menu a:hover { background: var(--c-tint); color: var(--c-primary); }
+.sort-menu a.is-active { color: var(--c-primary); font-weight: 600; }
+.sort-menu a.is-active::after {
+  content: ''; width: 5px; height: 10px; margin-top: -3px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg);
+}
+.sort-dropdown:hover .sort-menu, .sort-dropdown:focus-within .sort-menu, .sort-dropdown.is-open .sort-menu { opacity: 1; visibility: visible; transform: none; }
+/* Cuộn trang Ảnh: thanh công cụ dính ngay dưới header (header thu gọn 60px + viền 1px), nằm dưới header (z-index 50)
+   để menu thả xuống của header vẫn đè lên. Nền trải hết chiều ngang ở lớp ::before; overflow-x: clip: nền 100vw
+   không làm trang cuộn ngang, không phá sticky. */
+.gallery-section { overflow-x: clip; }
+.gallery-toolbar { position: sticky; top: 61px; z-index: 20; padding: 12px 0; margin-bottom: var(--space-heading); }
+.gallery-toolbar::before { content: ''; position: absolute; inset: 0 calc(50% - 50vw); z-index: -1; background: var(--c-bg); }
+.btn-label-short { display: none; } /* chữ ngắn của nút gửi ảnh: chỉ hiện trên điện thoại */
+@media (max-width: 760px) {
+  /* điện thoại: một hàng — nút gửi ảnh nhỏ bên trái, ô tìm giãn hết phần còn lại; không có nút sắp xếp.
+     Nút cao chẵn 44px bằng ô tìm: hàng cân, mép dải nền rơi đúng điểm ảnh nguyên (mép lẻ làm Chrome vẽ lộ vệt 1px) */
+  .gallery-toolbar { flex-wrap: nowrap; gap: 8px; padding: 10px 0; }
+  .gallery-toolbar > .btn { height: 44px; padding: 0 14px; gap: 6px; font-size: .88rem; white-space: nowrap; flex: none; }
+  .gallery-toolbar > .btn svg { width: 18px; height: 18px; }
+  .btn-label-full { display: none; }
+  .btn-label-short { display: inline; }
+  .gallery-filter { flex: 1; min-width: 0; }
+  .gallery-search { flex: 1; min-width: 0; }
+  .gallery-search input { width: 100%; padding: 0 40px 0 14px; font-size: 1rem; }
+  .sort-dropdown { display: none; }
+}
+
+.photo-submit-dialog {
+  width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; overscroll-behavior: contain;
+  padding: 0 24px 24px; border: 0; border-radius: 16px; background: #fff; color: var(--c-text);
+  box-shadow: 0 24px 60px rgba(42, 33, 27, .3);
+}
+.photo-submit-dialog::backdrop { background: rgba(42, 33, 27, .55); }
+.photo-submit-dialog.fits-visible-viewport {
+  position: fixed; inset: auto; margin: 0;
+  left: var(--photo-dialog-left, 16px); top: var(--photo-dialog-top, 16px);
+  max-width: calc(var(--photo-viewport-width, 100vw) - 24px);
+  max-height: calc(var(--photo-viewport-height, 100dvh) - 24px);
+  scroll-padding-top: 84px; scroll-padding-bottom: 24px;
+  -webkit-overflow-scrolling: touch;
+}
+.photo-submit-dialog[open]::backdrop { animation: fade-in .28s ease-out; }
+.photo-submit-dialog.is-closing::backdrop { animation: fade-out .2s ease-in forwards; }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+.photo-submit-dialog[open] { animation: dialog-in .3s cubic-bezier(.2, .8, .2, 1); }
+.photo-submit-dialog.is-closing { animation: dialog-out .2s ease-in forwards; }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(16px); } }
+@keyframes dialog-out { to { opacity: 0; transform: translateY(12px); } }
+.photo-submit-head {
+  position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 0 -24px 12px; padding: 18px 24px 12px; background: #fff; border-bottom: 1px solid var(--c-border);
+}
+.photo-submit-head h2 { margin: 0; font-size: var(--text-subheading); }
+.photo-submit-close {
+  width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--c-tint); color: var(--c-dark);
+  font-size: 1.4rem; line-height: 1; cursor: pointer;
+}
+.photo-submit-close:hover { background: var(--c-border); }
+.photo-submit-intro { margin-top: 0; color: var(--c-muted); }
+.photo-submit-form { display: grid; gap: 14px; }
+.photo-submit-form label { display: grid; gap: 6px; min-width: 0; font-weight: 600; font-size: .95rem; }
+.photo-submit-form input[type="text"], .photo-submit-form input[type="file"] {
+  width: 100%; min-width: 0; font: inherit; font-size: 16px; font-weight: 400; padding: 10px 12px;
+  border: 1px solid var(--c-border); border-radius: 8px; background: var(--c-bg);
+}
+.photo-submit-form input[type="file"] { padding: 14px 12px; border: 2px dashed var(--c-border); cursor: pointer; }
+.photo-submit-form input[type="file"]:hover { border-color: var(--c-accent); }
+.photo-submit-form input:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 1px; border-color: var(--c-primary); }
+.photo-submit-form small { font-weight: 400; color: var(--c-muted); font-size: .85rem; }
+.photo-submit-form button[type="submit"] { justify-self: start; min-width: 160px; }
+/* Ô bẫy bot: đưa ra ngoài màn hình (không dùng display:none vì một số bot bỏ qua ô bị ẩn kiểu đó) */
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.notice { padding: 12px 14px; border-radius: 8px; margin-bottom: 14px; font-size: .95rem; }
+.notice-success { background: #eef6e8; color: #3d5a2a; border: 1px solid #cfe3c0; }
+.notice-error { background: #fbecea; color: #9a2f22; border: 1px solid #f0c9c3; }
+/* Trang Ảnh: chú thích nằm trên ảnh — dải tối mờ dần ở đáy, hiện khi rê chuột / focus bàn phím; tối đa 3 dòng */
+.photo-hover-caption {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: 40px 14px 12px;
+  background: linear-gradient(to top, rgba(20, 14, 10, .85) 0%, rgba(20, 14, 10, .55) 55%, rgba(20, 14, 10, 0) 100%);
+  color: rgba(255, 248, 240, .8); font-size: 11px; font-weight: 400; line-height: 1.35; text-align: left; text-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  opacity: 0; transition: opacity .3s;
+}
+.gallery-grid figure > a:hover .photo-hover-caption, .gallery-grid figure > a:focus-visible .photo-hover-caption { opacity: 1; }
+/* Có chú thích thì bỏ lớp phủ tối + biểu tượng phóng to giữa ảnh (site-effects.css) để chữ không bị che */
+.gallery-grid figure > a:has(.photo-hover-caption)::after { content: none; }
+/* Cảm ứng không rê chuột được: luôn hiện chú thích */
+@media (hover: none) { .photo-hover-caption { opacity: 1; } }
+.photo-credit { display: block; font-size: .8rem; color: var(--c-muted); font-style: italic; margin-top: 2px; }
+/* Icon trang cá nhân cạnh tên người gửi, màu theo từng mạng xã hội */
+.profile-link {
+  display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; margin-left: 2px;
+  border-radius: 50%; vertical-align: middle; color: var(--c-muted); background: var(--c-tint); transition: transform .15s;
+}
+.profile-link:hover { transform: scale(1.12); }
+.profile-link svg { width: 14px; height: 14px; }
+.profile-facebook { color: #1877f2; }
+.profile-instagram { color: #d6249f; }
+.profile-tiktok { color: #111; }
+.profile-youtube { color: #ff0000; }
+.profile-threads, .profile-x { color: #111; }
+.profile-zalo { color: #0068ff; }
+.profile-zalo svg { width: 18px; height: 18px; }
+.profile-website { color: var(--c-primary); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Tim ảnh: nút tròn góc trên phải ảnh, đã tim thì tô đỏ */
+.gallery-grid figure { position: relative; }
+.photo-like { position: absolute; top: 8px; right: 8px; margin: 0; z-index: 1; }
+.photo-like button {
+  display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px 5px 8px; border: 0; border-radius: 999px;
+  background: rgba(255, 255, 255, .9); color: var(--c-dark); font: inherit; font-size: .85rem; font-weight: 600;
+  cursor: pointer; box-shadow: 0 2px 8px rgba(42, 33, 27, .2); transition: transform .15s;
+}
+.photo-like button:hover { transform: scale(1.06); }
+.photo-like svg { width: 18px; height: 18px; fill: none; }
+.photo-like button[aria-pressed="true"] { color: #c0392b; }
+.photo-like button[aria-pressed="true"] svg { fill: currentColor; }
+/* Chỉ nảy khi vừa bấm tim (JS gắn lớp is-popping), không nảy lúc tải trang */
+.photo-like button.is-popping svg { animation: like-pop .3s ease; }
+@keyframes like-pop { 50% { transform: scale(1.3); } }
+
+/* Điện thoại: ảnh 2 cột; popup thành tấm trượt lên từ đáy màn hình, nút gửi rộng hết hàng */
+@media (max-width: 600px) {
+  .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gallery-grid figcaption { font-size: .8rem; } /* dòng người gửi một dòng, tên dài cắt "…"; icon trang cá nhân giữ ở cuối */ .gallery-grid .photo-credit { display: inline-block; max-width: 100%; vertical-align: top; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .gallery-grid .photo-credit:has(.profile-link) { position: relative; padding-right: 26px; } .gallery-grid .photo-credit .profile-link { position: absolute; right: 0; top: 50%; margin: -11px 0 0; }
+  .photo-hover-caption { padding: 28px 8px 8px; }
+  .photo-like { top: 6px; right: 6px; }
+  .photo-like button { padding: 3px 8px 3px 6px; font-size: .78rem; }
+  .photo-submit-intro, .photo-submit-link-hint { display: none; } /* khung gửi ảnh gọn: bỏ câu giới thiệu + gợi ý ô link */
+  .photo-like svg { width: 15px; height: 15px; }
+  .photo-submit-dialog {
+    width: 100%; max-width: 100%; max-height: 92dvh; margin: auto 0 0; padding: 0 16px 20px;
+    border-radius: 18px 18px 0 0; animation-name: sheet-up;
+  }
+  .photo-submit-head { margin: 0 -16px 12px; padding: 16px 16px 10px; }
+  .photo-submit-head::before {
+    content: ""; position: absolute; top: 6px; left: 50%; width: 40px; height: 4px; margin-left: -20px;
+    border-radius: 2px; background: var(--c-border);
+  }
+  .photo-submit-form button[type="submit"] { justify-self: stretch; }
+}
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes sheet-down { to { transform: translateY(100%); } }
+@media (max-width: 600px) {
+  .photo-submit-dialog[open] { animation-name: sheet-up; animation-duration: .35s; }
+  .photo-submit-dialog.is-closing { animation-name: sheet-down; animation-duration: .25s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-submit-dialog[open], .photo-submit-dialog[open]::backdrop, .photo-submit-dialog.is-closing, .photo-submit-dialog.is-closing::backdrop, .photo-like button.is-popping svg { animation: none; }
+}
+
+/* Nút có icon đứng trước chữ (vd "Gửi ảnh của bạn") */
+.btn-with-icon { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-with-icon svg { flex: none; }
+/* Điện thoại: nút "Gửi ảnh của bạn" gần banner hơn */
+
+/* Lọc tại chỗ: khung kết quả mờ đi trong lúc tải, ảnh mới hiện dần */
+.gallery-results { transition: opacity .2s ease; }
+.gallery-results.is-loading { opacity: .45; pointer-events: none; }
+/* Vừa chọn kiểu sắp xếp: đóng menu dù chuột còn nằm trên đó */
+.sort-dropdown.is-suppressed .sort-menu { opacity: 0; visibility: hidden; transform: translateY(6px); }
+.sort-dropdown.is-suppressed .sort-dropdown-toggle::after { transform: rotate(45deg); opacity: .6; }
+
+/* Trang Ảnh: lời mời gửi ảnh ngay trên nút "Gửi ảnh của bạn" */
+.gallery-invite { margin-bottom: var(--space-heading); max-width: 640px; }
+.gallery-invite h2 { font-size: var(--text-subheading); margin: 0 0 4px; }
+.gallery-invite p { margin: 0; color: var(--c-muted); }
+
+/* Thông báo nổi (flash): lời cảm ơn sau khi gửi ảnh — giữa, ngay dưới đầu trang (không đè các nút nổi góc phải dưới);
+   hiện lên nhẹ, tự mờ rồi biến mất sau 5 giây (site-interactions.js#setupFlash) */
+.flash-toast {
+  position: fixed; left: 50%; top: 88px; z-index: 120; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px; width: max-content; max-width: calc(100% - 32px);
+  padding: 12px 10px 12px 18px; border-radius: 12px; background: #3d5a2a; color: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25); font-size: .95rem; line-height: 1.45;
+  animation: flash-in .3s ease; transition: opacity .4s, transform .4s;
+}
+.flash-toast.is-hiding { opacity: 0; transform: translate(-50%, -12px); }
+.flash-toast-close { flex: none; background: none; border: 0; color: inherit; font-size: 1.4rem; line-height: 1; padding: 2px 8px; cursor: pointer; opacity: .85; }
+.flash-toast-close:hover, .flash-toast-close:focus-visible { opacity: 1; }
+@keyframes flash-in { from { opacity: 0; transform: translate(-50%, -12px); } to { opacity: 1; transform: translateX(-50%); } }

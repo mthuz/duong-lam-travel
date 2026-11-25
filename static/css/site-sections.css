@@ -1,0 +1,313 @@
+/* Các khối nội dung của trang công khai: hero, thẻ bài viết, thư viện ảnh, bài viết chi tiết. */
+.section { padding: var(--space-section) 0; }
+.gallery-section, .contact-intro, .village-intro, .post-body { padding-top: var(--space-after-banner); }
+.post-body .prose > :first-child { margin-top: 0; }
+.section-tinted { background: var(--c-tint); }
+.section-title { font-size: var(--text-section); }
+.section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-card); margin-bottom: var(--space-heading); }
+.section-head .section-title { margin-bottom: 0; }
+.section-head-center > :last-child { margin-bottom: 0; }
+.service-picker-list, .sort-menu { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.service-picker.opens-up .service-picker-list, .sort-dropdown.opens-up .sort-menu { top: auto; bottom: calc(100% + 6px); }
+@media (min-width: 641px) and (max-width: 1024px), (min-width: 641px) and (hover: none) and (pointer: coarse) {
+  .section-head .section-title { margin-bottom: 0; }
+  .section-head-center > :last-child { margin-bottom: 0; }
+  .journey-intro > p:last-child { margin-bottom: 0; }
+}
+
+/* Hero trang chủ: slideshow ảnh mới nhất, nền gradient khi chưa có ảnh */
+.hero {
+  position: relative; min-height: min(78vh, 720px); min-height: min(78svh, 720px); display: flex; align-items: center; color: #fff; overflow: hidden;
+  background: linear-gradient(135deg, #7a3720 0%, #9a4a2b 45%, #4d5f3a 100%);
+}
+.hero-slide {
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+  opacity: 0; transition: opacity 1.2s ease; transform: scale(1.04);
+  transform-origin: 50% 100%; /* hiệu ứng phóng chậm phóng từ mép dưới, mép dưới ảnh không bị đẩy ra ngoài */
+}
+.hero-slide.is-active { opacity: 1; }
+/* Ảnh banner admin chọn: điện thoại tải bản 800px, màn ≥ 700px bản 1600px (biến đặt trong style của từng ảnh, HOME-05) */
+.hero-slide { background-image: var(--slide-sm); }
+@media (min-width: 700px) { .hero-slide { background-image: var(--slide-lg); } }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20, 12, 6, .35), rgba(20, 12, 6, .65)); }
+.hero-content { position: relative; z-index: 1; max-width: 780px; margin-left: max(0px, calc((100% - 1180px) / 2)); margin-right: 0; }
+.hero h1 { color: #fff; font-size: var(--text-home-title); line-height: 1.2; }
+/* Tiêu đề chia hai vế sau dấu phẩy; vế dài được xuống dòng theo chỗ trống. */
+.hero-title-line { display: block; }
+/* Giữ hai vế tiêu đề; mỗi vế vẫn được ngắt nếu bản dịch dài hơn khung. */
+.hero-title-line { overflow-wrap: break-word; }
+.hero-lead { font-size: 1.12rem; line-height: 1.4; opacity: .95; max-width: 650px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+
+/* Thẻ bài viết */
+.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-card); }
+.post-card {
+  background: #fff; border-radius: var(--radius); overflow: hidden;
+  /* Bóng 2 lớp (sát mép + toả rộng) và viền rất mảnh để thẻ tách hẳn khỏi nền kem */
+  border: 1px solid rgba(60, 35, 20, .07);
+  box-shadow: 0 1px 3px rgba(60, 35, 20, .08), 0 8px 24px rgba(60, 35, 20, .12);
+  display: flex; flex-direction: column; transition: transform .2s;
+}
+.post-card:hover { transform: translateY(-4px); }
+.post-card-media { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--c-tint); }
+.post-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.post-card:hover .post-card-media img { transform: scale(1.05); }
+.media-placeholder {
+  width: 100%; height: 100%; display: grid; place-items: center; color: #fff;
+  font-family: var(--font-head); font-size: 1.3rem;
+  background: linear-gradient(135deg, var(--c-primary), var(--c-green));
+}
+.post-card-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+.post-card-body h3 { font-size: var(--text-card-title); margin: 10px 0 8px; }
+.post-card-body h3 a { color: var(--c-dark); }
+.post-card-body h3 a:hover { color: var(--c-primary); }
+.post-card-body p {
+  color: var(--c-muted); font-size: var(--text-card); line-height: var(--leading-card);
+  flex: none; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden;
+}
+.post-card-body > .read-more { margin-top: auto; }
+@media (min-width: 641px) and (max-width: 1024px), (min-width: 641px) and (hover: none) and (pointer: coarse) {
+  .post-card-body > p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+}
+.post-meta { display: flex; align-items: center; gap: 12px; font-size: var(--text-meta); line-height: var(--leading-card); color: var(--c-muted); }
+
+/* Dải ảnh trang chủ và thư viện ảnh */
+.photo-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-photo); }
+.photo-strip a, .gallery-grid figure > a { display: block; overflow: hidden; border-radius: 8px; aspect-ratio: 1; background: var(--c-border); }
+.photo-strip img, .gallery-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.photo-strip a:hover img, .gallery-grid figure > a:hover img { transform: scale(1.06); }
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-photo); }
+.gallery-grid figure { margin: 0; }
+.gallery-grid figcaption { font-size: .88rem; color: var(--c-muted); padding: 6px 2px 0; }
+
+/* Lời kêu gọi liên hệ */
+.cta-band { background: var(--c-primary); color: #fff; padding: var(--space-section) 0; text-align: center; }
+.cta-band h2 { color: #fff; }
+.cta-band .btn-primary { background: #fff; color: var(--c-primary); }
+.cta-band .btn-primary:hover { background: var(--c-tint); }
+
+/* Banner trang con */
+.page-banner {
+  padding: 72px 0 56px; color: #fff; text-align: center;
+  background: linear-gradient(135deg, #7a3720, #9a4a2b 50%, #4d5f3a);
+}
+.page-banner h1 { color: #fff; font-size: var(--text-banner); margin-bottom: .2em; overflow-wrap: break-word; }
+@media (max-width: 640px) {
+  .page-banner h1.banner-title-fit { font-size: calc(var(--text-banner) - 2px); }
+}
+.page-banner h1 .title-part { display: inline-block; } /* tiêu đề 2 vế (trang Về làng): không ngắt giữa một vế */
+.page-banner p:last-child { margin: 0; opacity: .9; }
+
+/* Trang Về làng: menu chuyên mục dính dưới header như thanh công cụ trang Ảnh (header thu gọn 60px + viền 1px), nền trải ngang ở ::before; overflow-x: clip để nền 100vw không làm trang cuộn ngang */ .blog-section, .service-page-section { overflow-x: clip; padding-top: calc(var(--space-after-banner) - 12px); } .category-bar { position: sticky; top: 61px; z-index: 20; padding: 12px 0; margin-bottom: var(--space-heading); } .category-bar::before { content: ''; position: absolute; inset: 0 calc(50% - 50vw); z-index: -1; background: var(--c-bg); } .category-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.category-tabs a { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--c-border); background: var(--c-service-card-bg); color: var(--c-dark); } .category-tabs .category-all { padding: 0 14px; } /* cao chẵn 40px: mép dải nền rơi đúng điểm ảnh nguyên */
+.category-tabs a.active { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+.category-tabs a { font-weight: 600; }
+@media (hover: hover) {
+  .category-tabs a:not(.active):hover, .service-picker-list a:not(.active):hover { background: #f2dfc1; color: var(--c-primary-dark); }
+}
+/* Về làng, điện thoại: hàng chuyên mục không vừa một dòng -> JS gắn .is-overflowing, ẩn hàng nút, hiện ô chọn xổ xuống (kiểu dáng ô chọn trang dịch vụ, site-service-pages.css ≤ 1100px). Hai lớp để thắng .service-picker { display } của trang dịch vụ */ .category-bar .category-picker { display: none; } .category-bar.is-overflowing .category-tabs { display: none; } .category-bar.is-overflowing .category-picker { display: block; position: relative; } .category-picker summary [data-category-picker-icon] { flex: none; display: flex; } /* ô biểu tượng trên dòng đang chọn: không giãn như chữ (.service-picker summary span { flex: 1 }) */
+
+.pagination { display: flex; justify-content: center; gap: 6px; margin-top: 40px; }
+.pagination a { min-width: 40px; padding: 8px 12px; text-align: center; border-radius: 8px; border: 1px solid var(--c-border); color: var(--c-text); }
+.pagination a.current, .pagination a:hover { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+
+/* Bài viết chi tiết */
+.post-hero {
+  position: relative; min-height: 360px; display: flex; align-items: flex-end; color: #fff; padding: 48px 0;
+  background: linear-gradient(135deg, #7a3720, #4d5f3a) center / cover no-repeat;
+}
+.post-hero.has-image { min-height: 440px; }
+.post-hero-content { position: relative; z-index: 1; max-width: 860px; }
+.post-hero h1 { color: #fff; font-size: var(--text-banner); margin: 12px 0 8px; }
+.post-hero time { opacity: .85; }
+
+.prose { max-width: min(100%, 70ch); font-size: var(--text-body); }
+.prose h2 { font-size: var(--text-section); margin-top: 1.6em; }
+.prose h3 { font-size: var(--text-subheading); margin-top: 1.4em; }
+.prose img { border-radius: var(--radius); margin: 1.5em auto; }
+.prose blockquote { margin: 1.5em 0; padding: 12px 20px; border-left: 4px solid var(--c-accent); background: var(--c-tint); font-style: italic; }
+.prose ul, .prose ol { padding-left: 1.4em; }
+.prose a { text-decoration: underline; }
+.prose .btn { text-decoration: none; }
+.prose .text-left { text-align: left; }
+.prose .text-center { text-align: center; }
+.prose .text-right { text-align: right; }
+.prose .text-center img { margin-left: auto; margin-right: auto; }
+.prose table { width: 100%; border-collapse: collapse; margin: 1.5em 0; font-size: .96rem; display: block; overflow-x: auto; }
+.prose th, .prose td { border: 1px solid var(--c-border); padding: 8px 12px; text-align: left; }
+.prose th { background: var(--c-tint); }
+.prose pre { background: #2a211b; color: #f3ebe0; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: .9rem; }
+.prose :not(pre) > code { background: var(--c-tint); padding: 1px 6px; border-radius: 4px; font-size: .92em; }
+.prose hr { border: 0; border-top: 1px solid var(--c-border); margin: 2em 0; }
+.post-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2em; }
+.post-tags .tag { text-decoration: none; }
+.lead { font-size: 1.2rem; color: var(--c-muted); }
+.back-link { margin-top: 2.5em; }
+
+@media (max-width: 960px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .card-grid { grid-template-columns: 1fr; } /* menu chuyên mục một dòng: không xuống hàng, nhiều mục thì vuốt ngang; mục đầu/cuối margin auto = căn giữa khi vừa, không bị cắt khi tràn */ .category-tabs { flex-wrap: nowrap; justify-content: flex-start; gap: 6px; overflow-x: auto; scrollbar-width: none; } .category-tabs::-webkit-scrollbar { display: none; } .category-tabs a { flex: none; padding: 0 14px; font-size: .9rem; } .category-tabs a:first-child { margin-left: auto; } .category-tabs a:last-child { margin-right: auto; } .category-tabs .category-all { padding: 0 12px; }
+  .photo-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .post-hero, .post-hero.has-image { min-height: 280px; padding: 24px 0; align-items: center; }
+  .post-hero h1 { margin: 8px 0 6px; overflow-wrap: anywhere; }
+  .compact-posts .post-card { display: grid; grid-template-columns: clamp(88px, 27vw, 116px) minmax(0, 1fr); min-height: 100px; }
+  .compact-posts .post-card-media { position: relative; aspect-ratio: auto; }
+  .compact-posts .post-card-media > * { position: absolute; inset: 0; }
+  .compact-posts .media-placeholder { padding: 6px; font-size: .85rem; text-align: center; overflow-wrap: anywhere; }
+  .compact-posts .post-card-body { justify-content: center; padding: 10px 12px; min-width: 0; overflow-wrap: anywhere; }
+  .compact-posts .post-card-body h3 { font-size: var(--text-card-title); margin: 6px 0 0; }
+  .compact-posts .post-card-body > p { flex: none; margin: 4px 0 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: .875rem; text-align: start; }
+  .compact-posts .post-meta time, .compact-posts .post-card-body > .read-more { display: none; }
+  .section-head { flex-direction: column; align-items: flex-start; }
+  .hero { min-height: 56vh; min-height: 56svh; padding-block: 24px; }
+  .page-banner p, .gallery-invite p, .section-head-center .muted-text { line-height: 1.4; }
+}
+
+/* Câu dẫn dưới tiêu đề trên banner trang (vd trang Ảnh) */
+@media (min-width: 641px) and (max-width: 1024px), (min-width: 641px) and (hover: none) and (pointer: coarse) {
+  .hero { min-height: clamp(400px, 48svh, 520px); padding-block: 32px; }
+}
+
+.page-banner p.banner-lead { max-width: 720px; margin: 10px auto 0; text-align: center; font-size: 1.08rem; font-style: italic; opacity: .92; }
+
+/* Cuộn vô tận (site-infinite-scroll.js, trang Về làng + Ảnh): hàng số trang ẩn khi script chạy; mốc tải dưới lưới hiện vòng
+   xoay trong lúc tải trang kế */
+.is-infinite .pagination { display: none; }
+.infinite-sentinel { position: relative; height: 1px; margin-top: 24px; }
+.infinite-sentinel.is-loading { height: 48px; }
+.infinite-sentinel.is-loading::after {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%;
+  border: 3px solid var(--c-border); border-top-color: var(--c-primary); animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .infinite-sentinel.is-loading::after { animation: none; } }
+
+/* Banner trang con — một khuôn cho mọi trang, có ảnh admin chọn hay đang dùng ảnh mặc định (theo mẫu 2026-11-14): cùng chiều
+   cao, chữ căn trái nằm giữa theo chiều dọc; ảnh phủ dưới lớp tối đậm bên trái nhạt dần sang phải; dòng nhỏ trắng có gạch ngắn.
+   Ảnh: admin chọn ở "Hiện ở" → Ảnh banner (trang dịch vụ: ảnh của chính dịch vụ); chưa chọn thì ảnh tường đá ong mặc định. */
+.page-banner { position: relative; overflow: hidden; isolation: isolate; display: grid; align-content: center; min-height: 360px; padding: 48px 0; text-align: left; background: #3a2618; }
+.page-banner-photo { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+.page-banner > picture, .gallery-grid figure > a > picture { display: contents; }
+.page-banner-photo[style] { object-position: var(--banner-pc-x, 50%) var(--banner-pc-y, 50%); transform: scale(var(--banner-pc-zoom, 1)); transform-origin: var(--banner-pc-x, 50%) var(--banner-pc-y, 50%); }
+.hero-slide-custom { background-position: var(--banner-pc-x, 50%) var(--banner-pc-y, 50%); transform-origin: var(--banner-pc-x, 50%) var(--banner-pc-y, 50%); }
+.hero-slide.hero-slide-custom.is-active { transform: scale(calc(var(--banner-pc-zoom, 1) * 1.04)); }
+@media (max-width: 699px) {
+  .hero-slide-custom { background-position: var(--banner-sp-x, 50%) var(--banner-sp-y, 50%); transform-origin: var(--banner-sp-x, 50%) var(--banner-sp-y, 50%); }
+  .hero-slide.hero-slide-custom.is-active { transform: scale(calc(var(--banner-sp-zoom, 1) * 1.04)); }
+}
+@media (max-width: 900px) {
+  .page-banner-photo[style] { object-position: var(--banner-sp-x, 50%) var(--banner-sp-y, 50%); transform: scale(var(--banner-sp-zoom, 1)); transform-origin: var(--banner-sp-x, 50%) var(--banner-sp-y, 50%); }
+}
+.page-banner::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(38, 24, 14, .88) 0%, rgba(38, 24, 14, .6) 45%, rgba(38, 24, 14, .15) 100%); }
+.page-banner .eyebrow, .hero .eyebrow { color: #fff; letter-spacing: .18em; } /* trang chủ: dòng nhỏ trên ảnh lớn cùng kiểu */
+.page-banner .eyebrow::after, .hero .eyebrow::after { content: ''; display: block; width: 40px; height: 2px; margin-top: 10px; background: currentColor; opacity: .8; }
+.page-banner h1, .page-banner p:not(.eyebrow) { max-width: 600px; text-shadow: 0 1px 12px rgba(0, 0, 0, .35); }
+.page-banner p.banner-lead { margin: 10px 0 0; text-align: left; }
+@media (max-width: 900px) {
+  .page-banner { min-height: 260px; padding: 32px 0; } /* Điện thoại và iPad nhỏ dùng cùng bố cục. */
+  .page-banner::before { background: linear-gradient(90deg, rgba(38, 24, 14, .85), rgba(38, 24, 14, .5)); }
+}
+/* Máy tính: ảnh trải hết chiều ngang bị cắt dẹt, phóng to -> ảnh chỉ chiếm 48% bên phải (trước 62%), bên trái nền nâu đậm, ảnh
+   mờ dần vào. Tiêu đề một dòng (vd. "Nhà cổ ông Nguyễn Văn Hùng"), cỡ tối đa 2.8rem cho vừa phần chữ bên trái ảnh */
+@media (min-width: 901px) {
+  .page-banner { min-height: 360px; }
+  .page-banner h1 { max-width: none; }
+  .page-banner-photo { left: auto; width: 48%; }
+  .page-banner::before { background: linear-gradient(90deg, #3a2618 52%, rgba(58, 38, 24, .7) 62%, rgba(58, 38, 24, .15) 80%, rgba(58, 38, 24, 0)); }
+}
+
+/* Khung ảnh có bóng đổ, nổi lên nhẹ khi rê chuột */
+.gallery-grid figure > a, .photo-strip a {
+  box-shadow: 0 2px 4px rgba(60, 35, 20, .08), 0 8px 20px rgba(60, 35, 20, .14); transition: box-shadow .3s, transform .3s;
+}
+.gallery-grid figure > a:hover, .photo-strip a:hover {
+  box-shadow: 0 4px 8px rgba(60, 35, 20, .1), 0 16px 32px rgba(60, 35, 20, .2); transform: translateY(-3px);
+}
+
+/* góc lõm màu nền dưới mép thanh, mỗi cột ảnh 2 góc (JS đặt vị trí): ảnh chui dưới thanh vẫn bo tròn góc */ .sticky-bar-corners { position: absolute; top: 100%; left: 0; right: 0; height: 0; pointer-events: none; } .sticky-bar-corners span { position: absolute; top: 0; } .sticky-bar-corners .is-left { background: radial-gradient(circle at 100% 100%, transparent 70.7%, var(--c-bg) calc(70.7% + 1px)); } .sticky-bar-corners .is-right { background: radial-gradient(circle at 0 100%, transparent 70.7%, var(--c-bg) calc(70.7% + 1px)); } .sticky-bar-corners .is-gap { height: 24px; background: linear-gradient(var(--c-bg), transparent); }
+@media (prefers-reduced-motion: reduce) {
+  .gallery-grid figure > a, .photo-strip a { transition: none; transform: none; }
+}
+
+/* CTA dùng ở trang chủ và trang dịch vụ. */
+.cta-actions { justify-content: center; }
+/* Màn nhỏ: 2 nút khối kêu gọi (Gọi + Zalo / nút đặt dịch vụ) vẫn một dòng — chữ không gãy, nhỏ gọn hơn (2026-11-16) */
+@media (max-width: 480px) {
+  .cta-actions { flex-wrap: nowrap; gap: 8px; }
+  .cta-actions .btn { white-space: nowrap; padding: 10px 14px; font-size: .875rem; }
+}
+
+
+/* Dòng thời gian dùng ở trang chủ, Homestay và Hướng dẫn viên. */
+/* Hành trình một ngày: cột giới thiệu cố định bên trái, dòng thời gian bên phải */
+.journey-layout { display: grid; grid-template-columns: 1fr 1.6fr; gap: var(--space-group); align-items: start; }
+.journey-intro { position: sticky; top: 100px; }
+.journey { list-style: none; margin: 0; padding: 0; position: relative; }
+.journey::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--c-border); }
+.journey-step { position: relative; padding: 0 0 32px 40px; }
+.journey-step:last-child { padding-bottom: 0; }
+.journey-step::before {
+  content: ''; position: absolute; left: 0; top: 6px; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--c-bg); border: 3px solid var(--c-primary);
+}
+.journey-time { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--c-accent); }
+.journey-step h3 { font-size: var(--text-subheading); margin: 4px 0 6px; }
+.journey-step p { color: var(--c-muted); margin: 0; }
+
+@media (max-width: 640px) {
+  .journey-step:not(:last-child) { padding-bottom: var(--space-card); }
+}
+
+@media (max-width: 960px) {
+  .journey-layout { grid-template-columns: 1fr; }
+  .journey-intro { position: static; }
+}
+
+/* Gạch màu nước chung với banner: CTA ở hai góc trên, footer ở hai góc dưới. */
+.laterite-contact {
+  position: relative; isolation: isolate; overflow: hidden;
+  /* Giữ nâu cam phía trên, chuyển mềm sang đúng màu nền footer ở mép dưới. */
+  background: linear-gradient(180deg, #984b2d 0%, #864229 50%, #60321f 80%, #402316 100%);
+  color: #fff8ed;
+}
+.laterite-contact::before, .laterite-contact::after,
+.site-footer::before, .site-footer::after {
+  content: ''; position: absolute; z-index: -1; width: min(38%, 420px); height: 140px;
+  background: url('/duong-lam-travel/static/images/banner-laterite-panel-1600.webp') left bottom / 760px 380px no-repeat;
+  mask-image: linear-gradient(to top, #000 55%, transparent), linear-gradient(to right, #000 65%, transparent);
+  mask-composite: intersect;
+  opacity: .7; filter: saturate(.9) brightness(1.06);
+  /* Chỉ giữ phần gạch sáng hơn nền, loại mảng nâu đen có sẵn trong ảnh. */
+  mix-blend-mode: lighten;
+  pointer-events: none;
+}
+.laterite-contact::before { top: 0; left: 0; transform: scaleY(-1); }
+.laterite-contact::after { top: 0; right: 0; transform: scale(-1, -1); }
+.site-footer::before, .site-footer::after { height: 80px; opacity: .37; }
+.site-footer::before { bottom: 0; left: 0; }
+.site-footer::after { bottom: 0; right: 0; transform: scaleX(-1); }
+@media (max-width: 640px) {
+  .laterite-contact::before, .laterite-contact::after,
+  .site-footer::before, .site-footer::after {
+    width: 42%; height: 80px; background-image: url('/duong-lam-travel/static/images/banner-laterite-panel-800.webp'); background-size: 440px 220px;
+  }
+  .site-footer::before, .site-footer::after { height: 46px; }
+}
+
+/* Banner mặc định: một nền liền mạch, không dán thêm họa tiết lên ảnh admin chọn. */
+.page-banner > .container { position: relative; z-index: 1; }
+/* Theo mẫu: gạch góc trên trái và chân banner, nền nâu hòa dần vào ảnh tải lên. */
+.page-banner::after {
+  content: ''; position: absolute; z-index: -1; inset: 0 auto 0 0; width: 68%; pointer-events: none;
+  background: url('/duong-lam-travel/static/images/banner-laterite-panel-1600.webp') left center / 100% 100% no-repeat;
+  mask-image: linear-gradient(90deg, #000 65%, rgba(0, 0, 0, .7) 82%, transparent 100%);
+  opacity: .75; filter: saturate(.9) brightness(1.06);
+}
+.page-banner-photo[src*="banner-heritage-"] { left: 0; width: 100%; object-position: center; }
+.post-hero:not(.has-image) { background-image: url('/duong-lam-travel/static/images/banner-heritage-1600.webp'); }
+@media (max-width: 900px) {
+  .page-banner::after { display: none; }
+  .post-hero:not(.has-image) { background-image: url('/duong-lam-travel/static/images/banner-heritage-800.webp'); }
+}

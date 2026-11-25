@@ -1,0 +1,233 @@
+/* Các khối riêng của trang chủ: số liệu, hành trình một ngày, bốn mùa, cách ghé thăm, đường tới làng. */
+
+/* Dải số liệu */
+/* Phác thảo neo góc dưới trái của mục, không đi theo cột giới thiệu sticky. */
+#hanh-trinh { position: relative; isolation: isolate; overflow-x: clip; }
+#hanh-trinh > .journey-layout { position: relative; z-index: 1; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.45fr); }
+/* Giữ intro bám khi cuộn, nằm trên lớp phác thảo nhạt. */
+#hanh-trinh .journey-intro { z-index: 1; }
+.home-journey-sketch {
+  /* Giữ kích thước ảnh và dịch về mép trái nếu khoảng trống trước các mốc bị hẹp. */
+  --sketch-width: min(46vw, 650px);
+  --sketch-left-edge: calc((min(100vw, 1180px) - 100vw) / 2 - 20px);
+  --sketch-inset: calc(var(--sketch-left-edge) + clamp(16px, 5vw, 80px) + min(3.8vw, 43px));
+  position: absolute; grid-column: 1 / 2; bottom: 18px;
+  left: clamp(var(--sketch-left-edge), 100% + var(--space-group) - var(--space-card) - var(--sketch-width), var(--sketch-inset));
+  width: var(--sketch-width); max-width: none; height: auto; margin: 0; transform: translateY(17%);
+  opacity: .95; filter: contrast(1.08) sepia(1) saturate(1.1) hue-rotate(-10deg);
+  mix-blend-mode: multiply; pointer-events: none;
+}
+@media (max-width: 960px) {
+  #hanh-trinh > .journey-layout { grid-template-columns: 1fr; }
+  .home-journey-sketch { position: relative; grid-column: auto; left: calc(clamp(16px, 5vw, 80px) - 20px + min(3.8vw, 43px)); bottom: auto; width: min(100% - 16px, 600px); transform: none; }
+}
+@media (max-width: 640px) {
+  /* Cắt khoảng trong suốt dưới chân hình. */
+  .home-journey-sketch {
+    left: calc(min(7vw, 33px) - 35px); width: calc(100% + 28px); height: calc((100vw - 12px) * .332);
+    margin-top: calc(8px - var(--space-group));
+    object-fit: cover; object-position: center top;
+  }
+}
+
+.fact-strip { background: var(--c-dark); color: #e9dfd2; padding: 24px 0; }
+.fact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+.fact strong { display: block; font-family: var(--font-head); font-size: clamp(1.7rem, 3.4vw, 2.3rem); color: var(--c-accent); line-height: 1.1; }
+.fact span { display: block; font-size: .88rem; line-height: 1.45; }
+
+/* Bốn mùa */
+.season-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-card); }
+.season {
+  border-radius: var(--radius); padding: 28px 22px; min-height: 190px; color: #fff;
+  position: relative; isolation: isolate; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-start; box-shadow: var(--shadow);
+}
+.season h3 { color: #fff; font-size: 1.6rem; margin-bottom: 6px; }
+.season p { margin: 0; font-size: .95rem; opacity: .95; }
+/* Ảnh từng mùa tải khi gần vùng nhìn; màu nền dự phòng giữ chữ dễ đọc. */
+.season-image { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: center var(--season-position); }
+.season::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(30, 20, 14, .72), rgba(30, 20, 14, .35) 55%, rgba(30, 20, 14, .1)); }
+.season-1 { --season-position: 70%; background-color: #8c3b2e; }
+.season-2 { --season-position: 35%; background-color: #9a4a2b; }
+.season-3 { --season-position: 60%; background-color: #4d5f3a; }
+.season-4 { --season-position: 55%; background-color: #2a211b; }
+.season h3, .season p { text-shadow: 0 1px 8px rgba(0, 0, 0, .45); }
+a.season, a.season:hover { color: #fff; text-decoration: none; } /* thẻ mùa dẫn tới bài viết của mùa đó */
+
+/* Ghé thăm nhẹ nhàng + đường tới làng */
+.visit-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-group); align-items: start; }
+/* Hoa giấy vươn từ mép khối và mờ dần về phía nội dung. */
+.section.visit-section { position: relative; isolation: isolate; overflow: hidden; }
+.visit-bougainvillea {
+  position: absolute; z-index: -1; left: -16px; bottom: -14px; width: clamp(220px, 25vw, 340px); height: auto;
+  mask-image: linear-gradient(90deg, #000 12%, rgba(0, 0, 0, .35) 42%, transparent 78%);
+  opacity: .42; pointer-events: none;
+}
+@media (max-width: 640px) {
+  .visit-bougainvillea { width: clamp(185px, 53vw, 245px); opacity: .3; }
+}
+.etiquette { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 18px; }
+.etiquette li { display: flex; gap: 16px; align-items: flex-start; }
+.etiquette-no {
+  flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--c-tint); color: var(--c-primary); font-weight: 700; font-family: var(--font-head);
+}
+.etiquette strong { display: block; margin-bottom: 2px; }
+.etiquette p { margin: 0; color: var(--c-muted); font-size: .95rem; }
+.arrival { background: var(--c-tint); border-radius: var(--radius); padding: 28px; }
+.arrival dl { margin: 8px 0 0; display: grid; gap: 16px; }
+.arrival dt { font-weight: 600; color: var(--c-primary); }
+.arrival dd { margin: 2px 0 0; color: var(--c-text); font-size: .95rem; }
+
+@media (max-width: 960px) {
+  .fact-grid, .season-grid { grid-template-columns: repeat(2, 1fr); }
+  .visit-layout { grid-template-columns: 1fr; }
+  /* Khi hai khối xếp dọc, neo hoa vào khối hướng dẫn thay vì đáy toàn section. */
+  .visit-etiquette { position: relative; isolation: isolate; }
+  .visit-bougainvillea { left: auto; right: -20px; bottom: -32px; transform: scaleX(-1); }
+}
+@media (max-width: 520px) {
+  .fact-grid { grid-template-columns: 1fr 1fr; gap: 14px 20px; }
+  .season-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .season { min-height: 180px; padding: 14px 12px; }
+  .season h3 { font-size: 1.25rem; }
+  .season p { font-size: .88rem; text-align: start; }
+}
+
+/* Trang "Về làng": các chương đánh số */
+.about-chapter { position: relative; padding-left: 84px; margin-bottom: 2.6em; }
+.about-chapter h2 { margin-top: 0; }
+.chapter-no {
+  position: absolute; left: 0; top: -6px; font-family: var(--font-head); font-size: 2.6rem;
+  font-weight: 700; color: var(--c-accent); line-height: 1;
+}
+@media (max-width: 640px) {
+  .about-chapter { padding-left: 0; }
+  .chapter-no { position: static; display: block; font-size: 2rem; margin-bottom: 6px; }
+}
+
+/* Các thẻ dịch vụ nằm dưới lịch trình trên trang chủ. */
+.journey-services { position: relative; z-index: 1; margin-top: var(--space-group); }
+.journey-services .section-title { font-size: var(--text-subheading); text-align: center; }
+.service-grid {
+  list-style: none; padding: 0; margin: var(--space-heading) auto 0; max-width: 1140px;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-card);
+} .service-grid:not(:has(> li:nth-child(5))) { grid-template-columns: repeat(4, 1fr); max-width: 920px; } /* en/fr/ja: 4 dịch vụ (Hướng dẫn viên chỉ tiếng Việt) */
+.service-grid > li { min-width: 0; }
+.service-card {
+  display: flex; flex-direction: column; align-items: center; height: 100%;
+  padding: 10px 12px; border-radius: var(--radius); color: var(--c-text);
+  background: var(--c-header-bg); border: 1px solid var(--c-border); box-shadow: var(--shadow);
+  transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+.service-card:hover, .service-card:focus-visible {
+  background: var(--c-tint); border-color: #d2b9a3; transform: translateY(-2px); color: var(--c-text);
+  box-shadow: 0 8px 20px rgba(60, 35, 20, .12);
+}
+.service-card svg { flex: none; width: 20px; height: 20px; color: var(--c-primary); }
+.service-card-heading { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px; }
+.service-card h4 { min-width: 0; color: var(--c-primary-dark); font-family: var(--font-head); font-size: 1rem; font-weight: 700; line-height: 1.3; margin: 0; }
+.service-card p { margin: 0; color: var(--c-muted); font-size: .875rem; line-height: var(--leading-card); text-align: center; text-align-last: auto; }
+html:not(:lang(vi)) .journey-services .service-card p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+@media (max-width: 360px) {
+  .service-grid .service-card { padding-inline: 4px; }
+  .service-card-heading { gap: 4px; }
+  .service-card svg { width: 18px; height: 18px; }
+}
+@media (min-width: 1101px) {
+  .service-grid { max-width: 1140px; }
+  .service-grid:not(:has(> li:nth-child(5))) { max-width: 920px; }
+  .service-card { padding: 16px; }
+  .service-card svg { width: 22px; height: 22px; }
+  .service-card h4 { font-size: 1rem; }
+}
+@media (max-width: 960px) { .service-grid { grid-template-columns: repeat(3, 1fr); } .service-grid:not(:has(> li:nth-child(5))) { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 561px) and (max-width: 960px) {
+  .service-grid:has(> li:nth-child(5)) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .service-grid:has(> li:nth-child(5)) > li { grid-column: span 2; }
+  .service-grid:has(> li:nth-child(5)) > li:nth-child(4) { grid-column: 2 / span 2; }
+  .service-grid:has(> li:nth-child(5)) > li:nth-child(5) { grid-column: 4 / span 2; }
+}
+@media (max-width: 560px) {
+  .service-grid { grid-template-columns: 1fr 1fr; }
+  .service-grid li:last-child:nth-child(odd) { grid-column: 1 / -1; } /* số thẻ lẻ: thẻ cuối trải hết hàng */
+  .service-card { padding-inline: 8px; }
+}
+.about-services { margin-top: 2em; padding-top: 1.2em; border-top: 1px solid var(--c-border); }
+
+@media (min-width: 641px) {
+  .compact-posts .card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 641px) and (max-width: 960px) {
+  .post-card-body { padding: 16px 14px 18px; }
+  .post-meta { gap: 8px; flex-wrap: wrap; }
+}
+
+/* Trang chủ — khối "Về làng" (rút gọn trang Giới thiệu): chữ bên trái, 4 điểm nhấn lưới 2×2 bên phải, không đánh số;
+   mỗi điểm nhấn có gạch ngắn màu đá ong trên tiêu đề */
+/* Giữ tiêu đề ở hàng riêng, lời giới thiệu và bốn điểm nhấn bắt đầu cùng hàng. */
+.village-intro { position: relative; isolation: isolate; overflow: hidden; }
+.home-village-sketch {
+  position: absolute; z-index: -1; bottom: 0;
+  right: clamp(0px, calc((100vw - 1180px) / 2), min(8vw, 144px));
+  width: min(30vw, 345px); height: auto; opacity: .7; mix-blend-mode: multiply; pointer-events: none;
+  mask-image:
+    linear-gradient(to right, transparent, rgba(0, 0, 0, .28) 8%, rgba(0, 0, 0, .75) 23%, #000 39%),
+    linear-gradient(to bottom, transparent, rgba(0, 0, 0, .25) 8%, rgba(0, 0, 0, .4) 55%, rgba(0, 0, 0, .8) 82%, #000);
+  mask-composite: intersect;
+}
+.village-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); column-gap: var(--space-group); row-gap: 0; align-items: start; }
+.village-head { grid-column: 1; grid-row: 1; }
+.village-text { grid-column: 1; grid-row: 2; min-width: 0; }
+.village-highlights { grid-column: 2; grid-row: 2; min-width: 0; }
+.village-lead { font-size: var(--text-body); margin: 0 0 18px; }
+.village-more { font-weight: 600; justify-self: start; }
+/* WEB-04: câu giới thiệu gia đình đứng sau website (khối "Về làng" trang chủ) */
+.family-note { margin: 0 0 18px; padding-left: 14px; border-left: 3px solid var(--c-accent); color: var(--c-muted); font-style: italic; }
+.village-highlights { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 32px; align-content: start; }
+.village-highlight { position: relative; }
+.village-highlight h3 { font-size: var(--text-subheading); margin: 0 0 6px; }
+.village-highlight p { margin: 0; color: #51473d; font-size: .95rem; }
+.village-intro .family-note { margin-bottom: 0; color: #51473d; }
+.village-highlight::before { content: ""; position: absolute; left: 0; top: -17px; width: 36px; height: 3px; border-radius: 2px; background: var(--c-primary); }
+@media (min-width: 961px) {
+  .village-highlights { align-self: stretch; align-content: space-between; }
+  .village-more { grid-column: 1; grid-row: 3; margin-top: 18px; }
+}
+@media (max-width: 960px) {
+  .village-layout { grid-template-columns: 1fr; row-gap: var(--space-group); }
+  .village-head, .village-text, .village-highlights { grid-column: auto; grid-row: auto; }
+  .village-more { margin-top: calc(var(--space-heading) - var(--space-group)); }
+}
+@media (max-width: 600px) { .village-highlights { grid-template-columns: 1fr; } }
+@media (min-width: 641px) and (max-width: 960px) {
+  .village-layout { row-gap: 0; }
+  .village-head .section-title { margin-bottom: 0; }
+  .village-text { margin-top: 14px; }
+  .village-more { margin-top: 14px; }
+  .village-highlights { margin-top: 32px; }
+}
+
+@media (max-width: 640px) {
+  .village-layout { row-gap: 0; }
+  .home-village-sketch { width: min(64vw, 300px); }
+  .village-head .section-title { margin-bottom: 0; }
+  .village-text { margin-top: 14px; }
+  .village-more { margin-top: 10px; }
+  .village-highlights {
+    margin-top: var(--space-heading);
+    gap: calc(var(--space-card) + 6px);
+  }
+  .village-highlight::before { position: static; display: block; margin-bottom: 8px; }
+
+  .section-head { row-gap: 7px; }
+  .section-head .section-title { margin-bottom: 0; }
+  .season-grid, .compact-posts .card-grid { row-gap: calc(var(--space-card) + 4px); }
+  .season-grid { column-gap: calc(var(--space-card) + 4px); }
+  #hanh-trinh .journey-intro > p:last-child { margin-bottom: 0; }
+}

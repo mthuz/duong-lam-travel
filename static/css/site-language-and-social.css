@@ -1,0 +1,115 @@
+/* Nút chọn ngôn ngữ, cụm nút liên hệ nổi (Zalo, Facebook, gọi điện), mạng xã hội ở chân trang. */
+
+/* Chọn ngôn ngữ trong thanh menu */
+.lang-switch {
+  display: flex; align-items: center; gap: 2px; margin-left: 10px; padding: 3px;
+  border: 1px solid #dfcdb9; border-radius: 999px; background: var(--c-service-card-bg);
+}
+/* Mỗi ngôn ngữ là một ô cao cố định, chữ căn giữa cả ngang lẫn dọc (kể cả chữ Hán/Nhật) */
+.site-nav .lang-switch a {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; height: 28px; min-width: 40px;
+  padding: 0 10px; border-radius: 999px; line-height: 1; font-size: .82rem; font-weight: 600; color: var(--c-muted);
+  transition: color .2s, text-shadow .2s;
+}
+.site-nav .lang-switch a.active { background: var(--c-primary); color: #fff4e6; }
+
+/* Hover: cờ hiện dần dưới chữ; bóng chữ giữ độ tương phản trên nền cờ. */
+.site-nav .lang-switch a::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0; transform: scale(1.15);
+  background: var(--flag) center / cover no-repeat; transition: opacity .25s ease, transform .35s ease;
+}
+@media (hover: hover) { /* chỉ thiết bị có chuột: điện thoại chạm vào không bật :hover nên cờ không hiện/đọng lại */ .site-nav .lang-switch a:hover::before, .site-nav .lang-switch a:focus-visible::before { opacity: 1; transform: none; }
+.site-nav .lang-switch a:hover, .site-nav .lang-switch a:focus-visible {
+  color: #fff4e6; text-shadow: 0 0 2px rgba(0, 0, 0, .9), 0 1px 3px rgba(0, 0, 0, .7);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15);
+} }
+.lang-switch a[hreflang="vi"] { --flag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Crect width='30' height='20' fill='%23da251d'/%3E%3Cpath fill='%23ffff00' d='M15 1.5L16.91 7.37L23.08 7.37L18.09 11L20 16.88L15 13.25L10 16.88L11.91 11L6.92 7.37L13.09 7.37Z'/%3E%3C/svg%3E"); }
+.lang-switch a[hreflang="en"] { --flag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3CclipPath id='t'%3E%3Cpath d='M30 15h30v15zv15H0zH0V0zV0h30z'/%3E%3C/clipPath%3E%3Crect width='60' height='30' fill='%23012169'/%3E%3Cpath d='M0 0l60 30M60 0L0 30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0 0l60 30M60 0L0 30' clip-path='url(%23t)' stroke='%23c8102e' stroke-width='4'/%3E%3Cpath d='M30 0v30M0 15h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30 0v30M0 15h60' stroke='%23c8102e' stroke-width='6'/%3E%3C/svg%3E"); }
+.lang-switch a[hreflang="fr"] { --flag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='1' height='2' fill='%23002395'/%3E%3Crect x='1' width='1' height='2' fill='%23fff'/%3E%3Crect x='2' width='1' height='2' fill='%23ed2939'/%3E%3C/svg%3E"); }
+.lang-switch a[hreflang="ja"] { --flag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Crect width='30' height='20' fill='%23fff'/%3E%3Ccircle cx='15' cy='10' r='6' fill='%23bc002d'/%3E%3C/svg%3E"); }
+@media (prefers-reduced-motion: reduce) { .site-nav .lang-switch a::before { transition: none; transform: none; } }
+@media (max-width: 1100px) {
+  .lang-switch { margin: 24px auto 0; align-self: center; background: #fff; border-color: var(--c-border); box-shadow: 0 2px 10px rgba(60, 35, 20, .12); }
+  .site-nav .lang-switch a { flex: none; min-width: 58px; height: 36px; font-size: .88rem; }
+  .site-nav .lang-switch a.active { color: #fff; }
+}
+
+.footer-social .footer-map-button { display: none; }
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  .footer-social .footer-map-button { display: grid; }
+}
+
+/* Cụm nút nổi góc phải xếp dọc: Zalo, Facebook, Threads, gọi điện, lên đầu trang (cùng một cột nên luôn thẳng tâm) */
+.float-contacts {
+  position: fixed; right: 20px; bottom: 20px; z-index: 40;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.float-btn {
+  /* inset: auto xoá top/right/bottom còn sót từ CSS cũ (.float-call từng là nút position: fixed) */
+  position: relative; inset: auto; margin: 0; width: 50px; height: 50px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; box-shadow: var(--shadow);
+  transition: transform .2s;
+}
+.float-btn:hover { color: #fff; transform: scale(1.08); }
+.float-threads { background: #1f1f1f; }
+.float-zalo { background: #0068ff; }
+.float-facebook { background: #1877f2; }
+.float-call { background: var(--c-green); animation: float-pulse 2s infinite; }
+
+/* Nhãn hiện bên trái khi rê chuột */
+.float-btn::before {
+  content: attr(aria-label); position: absolute; right: 60px; top: 50%; transform: translateY(-50%);
+  padding: 4px 10px; border-radius: 6px; background: var(--c-dark); color: #fff;
+  font-size: .8rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.float-btn:hover::before { opacity: 1; }
+
+/* Nút Mạng xã hội: mở / gập Zalo, Facebook, Threads (mọi cỡ màn hình khi có JS, xem WEB-08 bên dưới); mở thì đổi thành × */
+.float-toggle {
+  display: none; place-items: center; width: 50px; height: 50px; padding: 0; border: 0; border-radius: 50%;
+  background: linear-gradient(135deg, #0068ff 0%, #7b3fe4 100%); color: #fff; box-shadow: var(--shadow); cursor: pointer; transition: transform .2s;
+}
+.float-toggle .float-toggle-close, .float-toggle[aria-expanded="true"] .float-toggle-open { display: none; }
+.float-toggle[aria-expanded="true"] .float-toggle-close { display: block; }
+/* WEB-08 (2026-11-15): mọi cỡ màn hình chỉ hiện nút Mạng xã hội + Gọi (+ lên đầu trang); 3 nút mạng xã hội ẩn tới khi bấm mở
+   (cần JS; không JS thì hiện đủ). Khung cột không nhận chạm để phần trang phía sau các nút đang ẩn vẫn bấm được. */
+.js .float-contacts { pointer-events: none; }
+.js .float-contacts > * { pointer-events: auto; }
+.js .float-toggle { display: grid; }
+.js .float-contacts .float-btn:not(.float-call) { transition: opacity .2s, transform .2s, visibility .2s; }
+.js .float-contacts:not(.is-open) .float-btn:not(.float-call) { opacity: 0; visibility: hidden; transform: translateY(12px) scale(.8); }
+/* Dùng visibility thay display để đo giao nhau ổn định và không làm nhảy nút lên đầu trang. */
+.js .float-contacts.is-obscuring-contact .float-btn,
+.js .float-contacts.is-obscuring-contact .float-toggle { opacity: 0; visibility: hidden; pointer-events: none; }
+.float-contacts.is-open .float-btn:not(.float-call)::before { opacity: 1; } /* mở ra thì hiện nhãn chữ bên trái */
+
+@keyframes float-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(77, 95, 58, .5); }
+  50% { box-shadow: 0 0 0 12px rgba(77, 95, 58, 0); }
+}
+@media (max-width: 1100px) {
+  /* nút nổi điện thoại + máy tính bảng (cùng mốc gập menu): cách mép dưới 42px + vùng an toàn (thanh điều hướng iPhone) */
+  .float-contacts { right: 14px; bottom: calc(42px + env(safe-area-inset-bottom)); gap: 10px; }
+  .float-btn, .back-to-top { width: 44px; height: 44px; }
+  /* Nút lên đầu trang tách khỏi cột, nằm giữa cạnh dưới màn hình */
+  .back-to-top { position: fixed; left: 50%; bottom: calc(42px + env(safe-area-inset-bottom)); transform: translateX(-50%); }
+  .float-btn::before { display: none; }
+  .float-toggle { width: 44px; height: 44px; }
+  /* Điện thoại không rê chuột: ẩn nhãn, chỉ hiện khi đã mở cụm nút (phần gập dùng chung ở trên) */
+  .float-contacts.is-open .float-btn:not(.float-call)::before { display: block; opacity: 1; right: 54px; }
+}
+
+/* Mạng xã hội ở chân trang */
+.footer-social { display: flex; gap: 10px; margin-top: 18px; }
+.footer-social a {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255, 255, 255, .08); color: #f0d7a8; transition: background .2s, color .2s;
+}
+.footer-social a:hover { background: var(--c-accent); color: var(--c-dark); }
+@media (pointer: coarse) {
+  .footer-social a { width: 44px; height: 44px; }
+  .footer-map-link { min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) { .float-call { animation: none; } }

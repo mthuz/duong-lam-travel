@@ -1,0 +1,342 @@
+/* Nền tảng chung: màu, chữ, header, footer, nút. Tông màu lấy cảm hứng từ đá ong và mái ngói. */
+:root {
+  --c-primary: #9a4a2b;      /* đá ong */
+  --c-primary-dark: #7a3720;
+  --c-accent: #c8963e;       /* vàng rơm */
+  --c-green: #4d5f3a;        /* rêu */
+  --c-text: #2d2620;
+  --c-muted: #6f655b;
+  --c-bg: #fffdf9;
+  --c-header-bg: #faf4ea;
+  --c-service-card-bg: #faedd6;
+  --c-tint: #f5eee3;
+  --c-border: #e6dccd;
+  --c-dark: #2a211b;
+  --radius: 10px;
+  --shadow: 0 6px 24px rgba(60, 35, 20, .08);
+  --space-section: 68px;
+  --space-after-banner: 48px;
+  --space-group: 40px;
+  --space-heading: 24px;
+  --space-card: 20px;
+  --space-photo: 16px;
+  --content-gutter: 20px;
+  --font-body: 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-head: 'Playfair Display', Georgia, serif;
+  --text-body: 1rem;
+  --text-card: .9375rem;
+  --text-meta: .8125rem;
+  --text-banner: clamp(2.5rem, 3.0556vw, 2.75rem);
+  --text-section: clamp(2rem, 2.3611vw, 2.125rem);
+  --text-subheading: 1.375rem;
+  --text-card-title: 1.25rem;
+  --text-home-title: clamp(3.75rem, 4.4444vw, 4rem);
+  --leading-body: 1.6;
+  --leading-heading: 1.25;
+  --leading-card: 1.5;
+}
+
+/* Thang chữ riêng, không đổi breakpoint bố cục trong bước chuẩn hóa typography. */
+@media (max-width: 1439px) {
+  :root {
+    --space-section: 60px;
+    --text-banner: clamp(2.125rem, calc(.25rem + 2.5vw), 2.5rem);
+    --text-section: clamp(1.75rem, calc(.5rem + 1.6667vw), 2rem);
+    --text-home-title: clamp(3.25rem, calc(.75rem + 3.3333vw), 3.75rem);
+  }
+}
+@media (max-width: 1199px) {
+  :root {
+    --space-section: 48px; --space-after-banner: 36px; --space-group: 28px;
+    --space-heading: 18px; --space-card: 16px; --space-photo: 14px;
+    --text-banner: clamp(1.875rem, calc(.875rem + 1.6667vw), 2.125rem);
+    --text-section: clamp(1.625rem, calc(1.125rem + .8333vw), 1.75rem);
+    --text-subheading: 1.25rem;
+    --text-home-title: clamp(2.5rem, calc(.5rem + 3.3333vw), 3rem);
+  }
+}
+@media (max-width: 960px) {
+  :root {
+    --text-banner: clamp(1.75rem, calc(1.5rem + .625vw), 1.875rem);
+    --text-section: clamp(1.5rem, calc(1.25rem + .625vw), 1.625rem);
+    --text-card-title: 1.125rem;
+    --text-home-title: clamp(2.125rem, calc(1.375rem + 1.875vw), 2.5rem);
+  }
+}
+@media (max-width: 640px) {
+  :root {
+    --text-banner: clamp(1.625rem, calc(1.464286rem + .714286vw), 1.75rem);
+    --text-section: clamp(1.4375rem, calc(1.357143rem + .357143vw), 1.5rem);
+    --text-subheading: 1.1875rem;
+    --text-home-title: clamp(1.75rem, calc(1.428571rem + 1.428571vw), 2rem);
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    --text-banner: 1.625rem; --text-section: 1.4375rem;
+    --text-subheading: 1.125rem; --text-card: .875rem;
+    --text-home-title: clamp(1.625rem, 7.7778vw, 1.75rem);
+  }
+}
+
+@media (max-width: 960px) {
+  :root {
+    --space-section: 48px; --space-after-banner: 36px; --space-group: 28px;
+    --space-heading: 18px; --space-card: 16px; --space-photo: 14px;
+  }
+}
+@media (min-width: 641px) and (max-width: 1024px), (min-width: 641px) and (hover: none) and (pointer: coarse) {
+  :root { --space-section: 48px; --space-after-banner: 36px; --space-group: 28px; --space-heading: 18px; }
+}
+@media (max-width: 640px) {
+  :root {
+    --space-section: 44px; --space-after-banner: 32px; --space-group: 28px;
+    --space-heading: 16px; --space-card: 12px; --space-photo: 12px;
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    --space-section: 36px; --space-after-banner: 24px; --space-group: 24px;
+    --space-heading: 14px; --space-card: 10px; --space-photo: 10px;
+    --content-gutter: 16px;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; } /* điện thoại: bỏ ô xanh mỗi lần chạm; phím Tab vẫn có :focus-visible */
+body {
+  margin: 0; padding-top: 73px; /* chỗ của header cố định (72px + viền) */ font-family: var(--font-body); font-size: var(--text-body); line-height: var(--leading-body);
+  color: var(--c-text); background: var(--c-bg); font-variant-numeric: lining-nums; /* Playfair mặc định số kiểu cổ, cao thấp lệch nhau */
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--c-primary); text-decoration: none; }
+a:hover { color: var(--c-primary-dark); }
+h1, h2, h3 { font-family: var(--font-head); font-weight: 700; line-height: var(--leading-heading); margin: 0 0 .6em; color: var(--c-dark); }
+h1 { font-size: var(--text-banner); }
+h2 { font-size: var(--text-section); }
+h3 { font-size: var(--text-subheading); line-height: 1.3; }
+p { margin: 0 0 1em; }
+:focus-visible { outline: 3px solid var(--c-accent); outline-offset: 2px; }
+
+.container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 var(--content-gutter); }
+.center { text-align: center; }
+.empty { color: var(--c-muted); text-align: center; padding: 40px 0; }
+/* Chỉ giữ căn đều cho đoạn dài trên màn rộng; cột hẹp và màn nhỏ căn trái để tránh giãn từ. */
+main p, .prose li, .footer-note { text-align: justify; text-align-last: start; hyphens: auto; text-wrap: pretty; }
+@media (max-width: 960px) {
+  main p, .prose li, .footer-note { text-align: start; text-align-last: auto; }
+}
+.post-card-body p, .village-highlight p, .service-reason p, .service-room p, .etiquette p, .footer-note { text-align: start; text-align-last: auto; }
+/* Khối đang căn giữa giữ căn giữa; thẻ mùa trang chủ (cột hẹp ~226px) giữ canh trái — canh đều ở đó giãn rối (đo Edge) */
+.center p, .empty, .cta-band p, .section-head-center p, .hero-content p, .page-banner p, .contact-service p, .prose .text-center, .lightbox figure p, .season p { text-align: inherit; text-align-last: auto; }
+
+/* Nút */
+/* Nhãn nút 2 cỡ: màn ≤ 400px dùng nhãn ngắn (home.ctaZaloShort — vi "Nhắn Zalo", en / fr / ja "Zalo") để 2 nút Gọi / Zalo vẫn một dòng; nhãn đầy đủ ở aria-label */
+.cta-label-short { display: none; }
+@media (max-width: 400px) { .cta-label-full { display: none; } .cta-label-short { display: inline; } }
+.btn {
+  display: inline-block; min-height: 44px; padding: 12px 24px; border-radius: 999px;
+  border: 2px solid transparent; cursor: pointer; transition: background .2s, color .2s; font: inherit; font-weight: 600; line-height: 1.4;
+}
+.btn-primary { background: var(--c-primary); color: #fff; }
+.btn-primary:hover { background: var(--c-primary-dark); color: #fff; }
+.btn-ghost { border-color: #fff; color: #fff; background: rgba(255, 255, 255, .2); } /* nền trắng mờ, gần như trong suốt */
+.btn-ghost:hover { background: #fff; color: var(--c-primary); }
+
+.eyebrow {
+  text-transform: uppercase; letter-spacing: .12em; font-size: .8rem; font-weight: 600;
+  color: var(--c-accent); margin-bottom: .4em;
+}
+.tag {
+  display: inline-block; font-size: .78rem; font-weight: 600; padding: 2px 10px; border-radius: 999px;
+  background: var(--c-tint); color: var(--c-primary);
+}
+.tag-light { background: rgba(255, 255, 255, .2); color: #fff; }
+.read-more { font-weight: 600; }
+
+/* Header */
+.site-header { /* cố định (không sticky): co lại khi cuộn không kéo nội dung -> không rung; nền đặc: không lộ bóng nội dung */
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--c-header-bg);
+  border-bottom: 1px solid #e0cdb8;
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { display: flex; align-items: flex-end; gap: 10px; color: var(--c-dark); }
+/* Logo cổng nền trong suốt, giữ nguyên hình dáng, không bo cắt mép cây/mái. */
+.brand-logo { width: 56px; height: auto; flex-shrink: 0; }
+.brand-light { align-items: center; }
+.brand-light .brand-logo { width: 64px; height: 64px; padding: 0; object-fit: contain; background: #f8f1e4; border-radius: 12px; }
+.brand-text { font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; line-height: 1.1; -webkit-text-stroke: 0.4px currentColor; }
+/* Playfair cỡ nhỏ: nét thanh (nét ngang chữ Đ) chỉ ~1px, viền chữ mỏng cùng màu làm dày nét; dòng phụ (small) bỏ viền */
+.brand-text small { -webkit-text-stroke: 0; }
+.brand-text small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 11px; color: var(--c-muted); line-height: 1.3; margin-top: 3px; text-wrap: balance; } .brand-text small span { white-space: nowrap; } /* slogan dài: chỉ xuống dòng sau dấu phẩy, không dính dòng */
+/* Header: chân chữ dòng "Sơn Tây · Hà Nội" nằm đúng trên mép dưới logo (phần chữ y, g thò xuống dưới như chữ in) */
+.site-header .brand-text { margin-bottom: -1.5px; color: var(--c-primary); transition: color .2s; } /* tên làng màu đá ong, dòng phụ vẫn xám */
+.site-header .brand:hover .brand-text, .site-header .brand:focus-visible .brand-text { color: var(--c-primary-dark); } /* rê chuột: đá ong đậm hơn */
+.brand-light, .brand-light .brand-text small { color: #fff; }
+.brand-light .brand-text small { opacity: .7; }
+/* Màn hình hẹp: tên làng dài (vd "Duong Lam Ancient Village") vẫn nằm gọn cạnh nút menu */
+@media (max-width: 480px) { .brand-text { font-size: 1.02rem; } .site-header .brand-logo { width: 48px; } }
+
+.site-nav { display: flex; gap: 6px; }
+.site-nav a { padding: 8px 14px; border-radius: 999px; color: var(--c-text); font-weight: 500; white-space: nowrap; text-align: left; }
+.site-nav > a:hover { background: #edd9bb; color: var(--c-primary-dark); }
+.site-nav a.active { background: var(--c-primary); color: #fff; } /* đang chọn: nền đá ong chữ trắng cho nổi (như nút ngôn ngữ đang chọn) */
+
+
+.nav-toggle { display: none; background: none; border: 0; padding: 8px; cursor: pointer; }
+/* Menu điện thoại đang mở: trang phía dưới không cuộn. Chỉ khoá ở <html>: khoá cả body thì body thành khung cuộn riêng,
+   header dính (sticky) bám theo body và trôi mất khỏi màn hình */
+html.nav-locked { overflow: hidden; }
+.nav-toggle span { display: block; width: 24px; height: 2px; background: var(--c-dark); margin: 5px 0; transition: transform .2s, opacity .2s; }
+
+@media (max-width: 1100px) { /* menu gập: dưới mốc này tên làng + slogan (fr, ja) không còn chỗ cho menu */
+  .nav-toggle { display: block; }
+  html.nav-locked .site-header::before {
+    content: ''; position: absolute; z-index: 2; top: 100%; left: 0; right: 0; height: 20px;
+    background: linear-gradient(to bottom, rgba(60, 35, 20, .095), rgba(60, 35, 20, .045) 35%, rgba(60, 35, 20, .012) 70%, transparent);
+    pointer-events: none;
+  }
+  .site-nav {
+    /* Popup phủ kín màn hình dưới header (% tính theo khung header -> đúng cả khi header thu gọn); dải ảnh đá ong ở đáy.
+       Menu dài thì cuộn bên trong; trang phía sau khoá cuộn (html.nav-locked) */
+    position: absolute; z-index: 1; top: 100%; left: 0; right: 0; height: calc(100dvh - 100%); border-bottom: 1px solid var(--c-border);
+    overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 0;
+    background: #faf4ea; padding: 8px 20px calc(140px + env(safe-area-inset-bottom)); /* chừa đáy cho dải ảnh đá ong khi menu dài phải cuộn */
+    /* đóng/mở kiểu rèm kéo từ mép dưới header: không mờ dần (chữ menu chồng chữ trang), không dịch (đè mép header) */
+    visibility: hidden; clip-path: inset(0 0 100% 0); transition: clip-path .3s cubic-bezier(.4, 0, .2, 1), visibility .3s;
+  }
+  .site-nav.is-open { visibility: visible; clip-path: inset(0); } /* đáy menu: dải ảnh tường đá ong, mờ dần lên bằng mask nhiều nấc + lớp kem phủ nửa trên (màu ảnh ngả dần về nền, không lộ vệt / mép); nằm dưới chữ; ảnh chỉ gắn khi mở -> trang thường không tải */ .site-nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: min(420px, 55%); z-index: -1; pointer-events: none; -webkit-mask: linear-gradient(transparent, rgba(0, 0, 0, .08) 20%, rgba(0, 0, 0, .3) 40%, rgba(0, 0, 0, .65) 65%, rgba(0, 0, 0, .9) 85%, #000); mask: linear-gradient(transparent, rgba(0, 0, 0, .08) 20%, rgba(0, 0, 0, .3) 40%, rgba(0, 0, 0, .65) 65%, rgba(0, 0, 0, .9) 85%, #000); } .site-nav.is-open::after { background: linear-gradient(#faf4ea, rgba(250, 244, 234, .6) 35%, rgba(250, 244, 234, 0) 75%), url("/duong-lam-travel/static/images/menu-tuong-da-ong-800.webp") center 80% / cover no-repeat; }
+  .site-nav.is-open a { font-weight: 700; }
+  /* Mỗi mục một hàng, không vạch ngăn; mũi tên › bên phải. */
+  .site-nav > a { position: relative; display: flex; align-items: center; } .site-nav > a::after { content: ''; flex: none; margin: 0 4px 0 auto; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); opacity: .45; }
+  .site-nav > a { padding: 12px 14px; border-radius: 10px; font-size: 1.02rem; }
+  .site-nav > a:hover { background: none; }
+  .site-nav > a.active { background: var(--c-primary); color: #fff; } .site-nav > a.active::after { opacity: 1; } /* mục đang xem: nền đá ong, chữ trắng */
+  /* Giữ nét cuộn đơn giản; bóng chìm và viền sáng trong SVG tạo chiều sâu nhẹ. */
+  .site-nav > a.active {
+    background-image: linear-gradient(90deg, var(--c-primary), rgba(154, 74, 43, .15)), url('/duong-lam-travel/static/images/menu-wood-scroll.svg?v=2');
+    background-position: right center; background-size: 240px 100%, 240px 64px; background-repeat: no-repeat;
+  }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+
+/* Tablet: menu gập chỉ mở đủ hai hàng, không phủ hết màn hình. */
+@media (min-width: 641px) and (max-width: 1100px) {
+  .site-nav {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center; gap: 0 6px;
+    height: auto; max-height: calc(100dvh - 100%);
+    padding: 14px 20px 20px;
+    box-shadow: 0 12px 24px rgba(60, 35, 20, .12);
+  }
+  .site-nav::after { display: none; }
+  .site-nav > a {
+    justify-content: center; min-width: 0; min-height: 44px;
+    padding: 10px 4px; font-size: 1.0625rem; border-radius: 999px;
+  }
+  .site-nav > a::after { display: none; }
+  .site-nav > a.active { background-image: none; }
+  .site-nav .lang-switch {
+    grid-column: 1 / -1; justify-self: center; margin: 14px 0 0;
+  }
+  .site-nav .lang-switch a { min-height: 44px; }
+  .site-nav.is-open .lang-switch a { font-size: 1rem; }
+}
+
+/* iPad: dùng menu ngang gọn khi cả logo và các mục thực sự vừa trong header. */
+body:has(.site-header.has-inline-nav) { padding-top: 85px; }
+.site-header.has-inline-nav .header-inner { gap: 16px; height: 84px; }
+.site-header.has-inline-nav.is-scrolled .header-inner { height: 72px; }
+.site-header.has-inline-nav .brand { flex: none; }
+.site-header.has-inline-nav .nav-toggle { display: none; }
+.site-header.has-inline-nav .site-nav { position: static; display: flex; flex: none; flex-direction: row; align-items: center; gap: 4px; height: auto; padding: 0; border: 0; background: transparent; box-shadow: none; overflow: visible; visibility: visible; clip-path: none; transition: none; }
+.site-header.has-inline-nav .site-nav::after { display: none; }
+.site-header.has-inline-nav .site-nav > a { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 6px 12px; border-radius: 999px; font-size: 1rem; }
+.site-header.has-inline-nav .site-nav > a::after { display: none; }
+.site-header.has-inline-nav .site-nav > a.active { background-image: none; }
+.site-header.has-inline-nav .lang-switch { margin: 0 0 0 8px; padding: 2px; box-shadow: none; background: transparent; }
+.site-header.has-inline-nav .site-nav .lang-switch a { min-width: 44px; min-height: 32px; height: 32px; padding: 0 10px; font-size: .875rem; }
+
+/* Nâu đất tối hơn banner, vân giấy nhẹ và ánh nâu loang; gạch trang trí neo ở chân footer. */
+.site-footer {
+  position: relative; isolation: isolate; overflow: hidden;
+  background-color: #402316;
+  background-image: linear-gradient(180deg, #402316, rgba(64, 35, 22, 0) 64px),
+    url('/duong-lam-travel/static/images/footer-paper-grain.svg'),
+    radial-gradient(ellipse at 20% 15%, rgba(117, 68, 35, .18), transparent 65%),
+    linear-gradient(180deg, transparent 35%, rgba(19, 10, 6, .2));
+  background-size: auto, 180px 180px, auto, auto;
+  background-repeat: no-repeat, repeat, no-repeat, no-repeat;
+  background-blend-mode: normal, soft-light, normal, normal;
+  color: #d9cfc3; padding: var(--space-after-banner) 0 0; margin-top: 0;
+}
+.footer-divider { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: calc(100% - 24px); max-width: 1340px; height: 1px; background: rgba(255, 248, 237, .09); pointer-events: none; }
+.site-footer h3 { color: #fff; font-size: 1.1rem; }
+.site-footer a { color: #f0d7a8; }
+.footer-grid { display: grid; grid-template-columns: 1.25fr 1fr 1.25fr; gap: var(--space-group); } /* giới thiệu · liên hệ · bản đồ */
+.footer-note { margin-top: 16px; font-size: .92rem; }
+.footer-list { list-style: none; padding: 0; margin: 0; font-size: .92rem; }
+.footer-list li { margin-bottom: 8px; }
+.footer-address-area { display: block; } /* địa chỉ: phần sau nhà cổ luôn xuống dòng */
+/* Cột Bản đồ: điện thoại / không JS chỉ có nút link Google Maps; máy tính (JS gắn iframe) hiện bản đồ, ẩn nút.
+   Máy tính: bản đồ giãn hết chiều cao hàng (cao bằng cột dài nhất) để mép dưới 3 cột thẳng nhau */
+.footer-map { display: flex; flex-direction: column; align-items: flex-start; }
+.footer-map-link {
+  display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; font-size: .92rem;
+  background: rgba(255, 255, 255, .08); transition: background .2s, color .2s;
+}
+.footer-map-link:hover, .footer-map-link:focus-visible { background: var(--c-accent); color: var(--c-dark); }
+.footer-map-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+.footer-map-frame { display: none; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: rgba(255, 255, 255, .06); }
+.footer-map-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+@media (min-width: 1025px) and (hover: hover) and (pointer: fine) { .js .footer-map-frame { display: block; align-self: stretch; flex: 1; min-height: 180px; aspect-ratio: auto; } .js .footer-map-link { display: none; }
+  .footer-grid { align-items: end; }
+  html:not(:lang(vi)) .footer-grid {
+    grid-template-columns: minmax(0, 1fr) fit-content(44%) minmax(0, 1fr);
+    align-items: start;
+  }
+  .footer-note { margin-bottom: 0; }
+  .js .footer-map { align-self: stretch; }
+}
+.footer-bottom { border-top: 1px solid rgba(255, 255, 255, .1); margin-top: calc(var(--space-group) + 4px); padding: 20px; font-size: .85rem; text-align: center; }
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  .footer-map { display: none; }
+}
+@media (min-width: 641px) and (max-width: 1024px), (min-width: 641px) and (hover: none) and (pointer: coarse) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 300px));
+    justify-content: center; align-items: end;
+    column-gap: clamp(32px, 8vw, 96px);
+  }
+  html:not(:lang(vi)) .footer-grid {
+    grid-template-columns: minmax(0, 300px) fit-content(65%);
+    align-items: start;
+    column-gap: calc(var(--space-group) + 24px);
+  }
+  .footer-grid .footer-note { margin-bottom: 0; }
+}
+@media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; align-items: start; } }
+
+/* Nút nổi */
+/* Nằm cuối cột nút nổi (.float-contacts); ẩn bằng opacity nên vẫn giữ chỗ, các nút khác không nhảy vị trí */
+.back-to-top {
+  width: 50px; height: 50px; border-radius: 50%; padding: 0;
+  display: grid; place-items: center; border: 0; box-shadow: var(--shadow); cursor: pointer;
+}
+/* Viền trắng mờ dần ra ngoài (nhiều lớp bóng trắng nhạt dần) thay cho viền liền */
+.back-to-top {
+  background: var(--c-primary); color: #fff; border: 0;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .55), 0 0 8px 4px rgba(255, 255, 255, .35), 0 0 18px 8px rgba(255, 255, 255, .15), var(--shadow);
+}
+.back-to-top { opacity: 0; pointer-events: none; transition: opacity .2s; }
+.back-to-top.is-visible { opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .site-nav { transition: none; } }
+/* Nút "Gọi <số điện thoại>": số điện thoại đậm hơn chữ "Gọi" */
+.btn-call .cta-phone { font-weight: 600; letter-spacing: .02em; }
+
+/* Popup hoặc ảnh phóng to đang mở thì trang phía sau không cuộn */
+html.has-open-dialog { overflow: hidden; } /* JS gắn lớp này trước khi mở popup / ảnh phóng to */
+/* Luôn giữ chỗ cho thanh cuộn: khi khoá cuộn, thanh cuộn ẩn đi nhưng trang không bị xô sang phải */
+html { scrollbar-gutter: stable; }

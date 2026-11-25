@@ -1,0 +1,37 @@
+/* Chia sẻ bài viết */
+.post-share { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 2em; padding-top: 1.2em; border-top: 1px solid var(--c-border); }
+.post-share-title { font-weight: 600; color: var(--c-dark); margin-right: 4px; }
+.share-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 40px; height: 40px;
+  padding: 0 10px; border: 1px solid var(--c-border); border-radius: 999px; background: #fff; color: var(--c-dark);
+  font: inherit; font-size: .9rem; cursor: pointer; text-decoration: none; transition: background .2s, color .2s, border-color .2s;
+}
+.share-btn:hover { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+.share-btn.is-copied { background: var(--c-green); border-color: var(--c-green); color: #fff; }
+.share-copied:empty { display: none; }
+.share-copied { font-size: .85rem; }
+
+/* Chia sẻ bài viết trên máy tính: cột icon tròn bên trái nội dung, dính dưới thanh menu khi cuộn */
+.prose { position: relative; }
+@media (min-width: 1000px) {
+  .post-share-rail { position: absolute; top: 0; bottom: 0; left: -76px; width: 46px; }
+  .post-share-rail .post-share {
+    position: sticky; top: 110px; flex-direction: column; flex-wrap: nowrap; gap: 12px; margin: 0; padding: 0; border: 0;
+  }
+  .post-share-rail .post-share-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .post-share-rail .share-btn {
+    width: 44px; height: 44px; min-width: 0; padding: 0; border: 1px solid #d9d0c4; border-radius: 50%;
+    background: #fff; color: var(--c-muted); box-shadow: 0 2px 6px rgba(60, 35, 20, .06);
+  }
+  .post-share-rail .share-btn svg { width: 19px; height: 19px; }
+  .post-share-rail .share-btn:hover { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+  .post-share-rail .share-copied {
+    position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-50%); padding: 4px 10px; border-radius: 6px;
+    background: var(--c-dark); color: #fff; font-size: .8rem; white-space: nowrap; pointer-events: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .post-share { gap: 8px; }
+  .post-share-title { flex-basis: 100%; }
+}
